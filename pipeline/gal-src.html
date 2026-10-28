@@ -1,0 +1,98 @@
+<title>Рендеры Белого мрамора</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: вертикальная лента кадров 16:9 во всю ширину, подписи в стиле паспорта листа */
+:root{
+  --paper:#F1F0EC; --sheet:#FBFAF7; --ink:#1B1C1A; --muted:#6A6B65; --line:#D8D6CE; --acc:#2F4235; --hl:#D99A1E;
+  --f-disp:"Tenor Sans","Optima","Segoe UI",sans-serif;
+  --f-body:"Jost","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#111210;--sheet:#1A1B19;--ink:#ECEBE5;--muted:#9C9C94;--line:#33342F;--hl:#F0B43C;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#111210;--sheet:#1A1B19;--ink:#ECEBE5;--muted:#9C9C94;--line:#33342F;--hl:#F0B43C;color-scheme:dark}
+body[data-v="wood"]{--acc:#9A7444}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 56px}
+.wrap{max-width:1280px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between;margin-bottom:22px}
+h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(30px,5vw,52px);line-height:1;margin:6px 0 0;text-wrap:balance}
+.eyebrow{font:500 11px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lead{max-width:62ch;color:var(--muted);margin:10px 0 0;font-size:14.5px}
+.seg{display:inline-flex;border:1px solid var(--ink);border-radius:999px;padding:3px;gap:2px}
+.seg button{font:500 13px var(--f-body);border:0;background:transparent;color:var(--ink);padding:7px 15px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+button:focus-visible,figure:focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+.feed{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+figure{margin:0;background:var(--sheet);border:1px solid var(--line);cursor:zoom-in;min-width:0}
+figure.big{grid-column:1/-1}
+figure img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;max-width:100%;background:#2a2b29}
+figcaption{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:11px 14px;border-top:1px solid var(--line)}
+figcaption b{font:400 17px var(--f-disp)}
+figcaption span{font:12px var(--f-mono);color:var(--muted);text-align:right}
+.tag{display:inline-block;font:500 10.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-left:8px;vertical-align:2px}
+.tag.day{background:#E9E2CF;color:#5A4A1E}
+.tag.eve{background:#1E2433;color:#E9D7B0}
+.note{font-size:13px;color:var(--muted);margin-top:22px;max-width:75ch}
+.links{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:14px}
+.links a{color:var(--ink)}
+.lb{position:fixed;inset:0;z-index:20;background:rgba(10,10,10,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px))}
+.lb img{max-width:100%;max-height:calc(100% - 56px);object-fit:contain}
+.lb .bar{display:flex;gap:14px;align-items:center;color:#e8e6e0;font:13px var(--f-mono);margin-top:12px}
+.lb button{background:transparent;border:1px solid #777;color:#eee;border-radius:999px;padding:6px 14px;font:13px var(--f-body);cursor:pointer}
+@media (max-width:760px){.feed{grid-template-columns:minmax(0,1fr)}figcaption{flex-direction:column;gap:2px}figcaption span{text-align:left}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Проект «Белый мрамор» · фотореалистичные визуализации</div>
+      <h1>Рендеры помещений</h1>
+      <p class="lead">Акцент: глубокий зелёный. Кадры просчитаны по 3D-модели проекта с физическим светом: дневной свет из окон и вечерний сценарий со спотами, подвесами и световыми линиями. Нажмите на кадр, чтобы открыть его на весь экран.</p>
+    </div>
+  </header>
+  <section class="feed" id="feed"></section>
+  <p class="note">Мебель и декор в кадрах условные: формы и размеры по проекту, без конкретных моделей. Материалы, цвета, отделка стен и пола, свет и пропорции соответствуют альбому.</p>
+  <div class="links"><a href="https://claude.ai/artifact/9MB8Cj6L6JAypYiB44Hc24" target="_blank" rel="noopener">Альбом проекта ↗</a><a href="https://claude.ai/artifact/28H1v2KMhfgMxbCvUBXe2U" target="_blank" rel="noopener">Интерактивная 3D-модель ↗</a></div>
+</div>
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Кадр на весь экран">
+  <img id="lbImg" alt="">
+  <div class="bar"><button id="lbPrev" type="button">←</button><span id="lbCap"></span><button id="lbNext" type="button">→</button><button id="lbClose" type="button">Закрыть</button></div>
+</div>
+
+<script>
+(function(){
+const IMG=__IMAGES__;
+const SHOTS={
+  green:[['zal','day','Зал','ТВ-стена в глубоком зелёном вместе со скрытыми дверями',1],['zal','eve','Зал','вечер: сетка спотов и торшер',0],['zal2','day','Зал','диван, комод и проходы в кухню и коридор',0],
+         ['kitchen','day','Кухня','Г-образная, нижние фасады зелёные, столешница «мрамор»',1],['dining','day','Обеденная','стол из чёрного мрамора, стулья в бархате',0],['bed1','day','Спальня 1','стена за изголовьем глубокий зелёный',0],
+         ['bed1','eve','Спальня 1','вечер: споты в обход кровати и подвесы',0],['bed2','day','Спальня 2','светлая гамма, зелёный в текстиле',0],['cor','day','Коридор','лестница вверх в «чёрном мраморе», под ней марш вниз',1],
+         ['cor','eve','Коридор','вечер: хаотичные световые линии и подсветка ступеней',0],['bath','eve','Ванная','чёрный фактурный керамогранит, белый мрамор, дуб',0]],
+  wood:[['zal','day','Зал','панель из шпона дуба между дверями спален',1],['zal','eve','Зал','вечер: тёплый свет по дереву',0],['zal2','day','Зал','диван, комод из дуба, латунный торшер',0],
+        ['kitchen','day','Кухня','нижние фасады из дуба, латунный смеситель',1],['dining','day','Обеденная','стол из чёрного мрамора, чёрные стулья',0],['bed1','day','Спальня 1','панель из дуба за кроватью, латунные подвесы',0],
+        ['bed2','day','Спальня 2','изголовье из дуба',0],['cor','day','Коридор','ниша шкафа из дуба, лестница в «чёрном мраморе»',0],['bath','eve','Ванная','латунные смесители и полотенцесушитель',1]]
+};
+let v='green';
+let list=[], cur=0;
+const $=id=>document.getElementById(id);
+function render(){
+  document.body.dataset.v=v;
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));
+  list=SHOTS[v].filter(s=>IMG[`${v}_${s[1]}_${s[0]}`]);
+  $('feed').innerHTML=list.map((s,i)=>`<figure tabindex="0" data-i="${i}" class="${s[4]?'big':''}"><img loading="lazy" src="${IMG[`${v}_${s[1]}_${s[0]}`]}" alt="${s[2]}: ${s[3]}"><figcaption><b>${s[2]}<span class="tag ${s[1]}">${s[1]==='day'?'день':'вечер'}</span></b><span>${s[3]}</span></figcaption></figure>`).join('');
+  try{localStorage.setItem('bm-gal',v)}catch(e){}
+}
+function open(i){cur=(i+list.length)%list.length; const s=list[cur]; $('lbImg').src=IMG[`${v}_${s[1]}_${s[0]}`]; $('lbImg').alt=s[2]; $('lbCap').textContent=`${s[2]} · ${s[1]==='day'?'день':'вечер'} · ${cur+1}/${list.length}`; $('lb').hidden=false; $('lbClose').focus();}
+function close(){$('lb').hidden=true;}
+$('feed').addEventListener('click',e=>{const f=e.target.closest('figure'); if(f) open(+f.dataset.i);});
+$('feed').addEventListener('keydown',e=>{const f=e.target.closest('figure'); if(f&&(e.key==='Enter'||e.key===' ')){e.preventDefault();open(+f.dataset.i);}});
+$('lbPrev').onclick=()=>open(cur-1); $('lbNext').onclick=()=>open(cur+1); $('lbClose').onclick=close;
+$('lb').addEventListener('click',e=>{if(e.target.id==='lb')close();});
+document.addEventListener('keydown',e=>{if($('lb').hidden)return; if(e.key==='Escape')close(); if(e.key==='ArrowLeft')open(cur-1); if(e.key==='ArrowRight')open(cur+1);});
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{v=b.dataset.v;render();}));
+render();
+})();
+</script>

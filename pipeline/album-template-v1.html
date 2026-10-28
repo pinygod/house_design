@@ -1,0 +1,944 @@
+<title>Проект «Белый мрамор»</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: архитектурный альбом — листы с штампом, чертёж слева, пояснения справа */
+:root{
+  --paper:#EEEDE8; --sheet:#FAF9F6; --ink:#1B1C1A; --muted:#696A64; --line:#D6D4CC;
+  --d-bg:#FAF9F6; --d-ink:#1B1C1A; --d-wall:#2B2C2A; --d-floor:#FFFFFF; --d-glass:#DCE6EA; --d-dim:#55564F; --d-furn:#F3F2EE; --d-soft:#E4E2DC;
+  --light:#D99A1E; --acc:#2F4235; --acc-ink:#FFFFFF;
+  --f-disp:"Tenor Sans","Optima","Segoe UI",sans-serif;
+  --f-body:"Jost","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#121311; --sheet:#1B1C1A; --ink:#ECEBE5; --muted:#9C9C94; --line:#34352F;
+  --d-bg:#1F201E; --d-ink:#E6E5DF; --d-wall:#D2D0C8; --d-floor:#2A2B28; --d-glass:#3C4A50; --d-dim:#AFAEA6; --d-furn:#33342F; --d-soft:#3E3F3A;
+  --light:#F0B43C; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#121311; --sheet:#1B1C1A; --ink:#ECEBE5; --muted:#9C9C94; --line:#34352F;
+  --d-bg:#1F201E; --d-ink:#E6E5DF; --d-wall:#D2D0C8; --d-floor:#2A2B28; --d-glass:#3C4A50; --d-dim:#AFAEA6; --d-furn:#33342F; --d-soft:#3E3F3A;
+  --light:#F0B43C; color-scheme:dark }
+body[data-v="wood"]{ --acc:#9A7444 }
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+h1,h2,h3{font-family:var(--f-disp);font-weight:400;text-wrap:balance;margin:0}
+.wrap{max-width:1240px;margin:0 auto}
+
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-left,0px))}
+.top .wrap{display:flex;gap:12px 20px;align-items:center;flex-wrap:wrap}
+.brand{font-family:var(--f-disp);font-size:17px;letter-spacing:.02em;margin-right:auto}
+.seg{display:inline-flex;border:1px solid var(--ink);border-radius:999px;padding:3px;gap:2px}
+.seg button{font:500 13px var(--f-body);border:0;background:transparent;color:var(--ink);padding:6px 14px;border-radius:999px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.seg button:focus-visible,.toc a:focus-visible{outline:2px solid var(--light);outline-offset:2px}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.toc{display:flex;gap:4px 14px;flex-wrap:wrap;font-size:12.5px;width:100%}
+.toc a{color:var(--muted);text-decoration:none;font-family:var(--f-mono);white-space:nowrap}
+.toc a:hover{color:var(--ink)}
+
+.cover{padding-block:56px 40px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end}
+.eyebrow{font:500 11.5px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.cover h1{font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.01em;margin-block:14px 18px}
+.cover p.lead{font-size:18px;max-width:58ch;margin:0}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--ink)}
+.facts div{padding:12px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
+.facts div:nth-child(odd){padding-right:16px}
+.facts span{color:var(--muted);font-size:13px}
+.facts b{font:500 14px var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+
+.sheet{background:var(--sheet);border:1px solid var(--line);margin-top:28px}
+.stamp{display:grid;grid-template-columns:auto minmax(0,1fr) auto;border-bottom:1px solid var(--ink)}
+.stamp>*{padding:12px 18px}
+.stamp .no{font:500 12px var(--f-mono);letter-spacing:.1em;border-right:1px solid var(--line);display:flex;align-items:center;white-space:nowrap}
+.stamp h2{font-size:22px;align-self:center}
+.stamp .meta{font:12px var(--f-mono);color:var(--muted);border-left:1px solid var(--line);display:flex;align-items:center;white-space:nowrap}
+.body{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:0}
+.body.full{grid-template-columns:minmax(0,1fr)}
+.fig{padding:18px;border-right:1px solid var(--line);min-width:0}
+.body.full .fig{border-right:0}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.scroll svg{display:block;width:100%;min-width:560px;height:auto}
+.notes{padding:20px 22px;min-width:0;display:flex;flex-direction:column;gap:18px;font-size:14px}
+.notes h3{font-size:16px;margin-bottom:6px}
+.notes ul{margin:0;padding-left:18px}
+.notes li+li{margin-top:4px}
+.legend{display:grid;gap:8px}
+.legend div{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;font-size:13px}
+.legend svg{width:34px;height:22px;border:1px solid var(--line)}
+.note{font-size:13px;color:var(--muted);border-left:2px solid var(--light);padding-left:10px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+/* concept */
+.concept{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border-top:0}
+.concept>section{padding:22px;min-width:0}
+.concept>section+section{border-left:1px solid var(--line)}
+.sw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+.sw figure{margin:0;display:flex;flex-direction:column;gap:6px}
+.sw svg{width:100%;aspect-ratio:4/3;height:auto;max-width:100%;display:block;border:1px solid var(--line)}
+.sw figcaption{font-size:12.5px;line-height:1.35}
+.sw figcaption small{display:block;color:var(--muted);font-family:var(--f-mono);font-size:11px}
+.vtag{display:inline-block;font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--acc);color:var(--acc-ink)}
+.prose{max-width:62ch}
+.prose p{margin:0 0 10px}
+
+/* rooms */
+.rooms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.room{padding:20px 22px;border-bottom:1px solid var(--line);min-width:0}
+.room:nth-child(odd){border-right:1px solid var(--line)}
+.room header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
+.room h3{font-size:21px}
+.room dl{display:grid;grid-template-columns:96px minmax(0,1fr);gap:6px 14px;margin:0;font-size:14px}
+.room dt{color:var(--muted);font-size:12px;font-family:var(--f-mono);padding-top:2px}
+.room dd{margin:0}
+.room dd.accent{border-left:3px solid var(--acc);padding-left:10px}
+
+/* tables */
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--ink)}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.grp td{font-family:var(--f-disp);font-size:15px;padding-top:18px;border-bottom:1px solid var(--ink)}
+.tbl{overflow-x:auto;padding:4px 18px 18px}
+.tbl table{min-width:720px}
+.pill{display:inline-block;font:500 10.5px var(--f-mono);padding:2px 6px;border-radius:3px;border:1px solid var(--acc);color:var(--ink);white-space:nowrap}
+
+.elevs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.elev{padding:18px;border-bottom:1px solid var(--line);min-width:0}
+.elev:nth-child(odd){border-right:1px solid var(--line)}
+.elev.wide{grid-column:1/-1;border-right:0}
+.elev h3{font-size:16px;margin-bottom:8px}
+.elev p{font-size:13px;color:var(--muted);margin:8px 0 0}
+.elev .scroll svg{min-width:420px}
+
+.refgrid{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:22px;padding:20px 22px;align-items:start}
+.refgrid img{width:100%;border:1px solid var(--line);display:block}
+.refgrid ol{margin:0;padding-left:20px}
+.refgrid li+li{margin-top:6px}
+
+.qs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.qs>section{padding:20px 22px;min-width:0}
+.qs>section+section{border-left:1px solid var(--line)}
+.qs ol{margin:8px 0 0;padding-left:20px}
+.qs li+li{margin-top:8px}
+details.src{padding:14px 22px;border-top:1px solid var(--line)}
+details.src summary{cursor:pointer;font:500 12px var(--f-mono);letter-spacing:.06em}
+details.src img{max-width:520px;width:100%;margin-top:12px;border:1px solid var(--line)}
+
+/* svg classes */
+.wall{fill:var(--d-wall)}
+.flr{fill:var(--d-floor)}
+.glass{fill:var(--d-glass);stroke:var(--d-ink);stroke-width:14}
+.thin{stroke:var(--d-ink);stroke-width:14;fill:none}
+.hair{stroke:var(--d-ink);stroke-width:8}
+.dim{stroke:var(--d-dim);stroke-width:10;fill:none}
+.dimt{fill:var(--d-dim);font:150px var(--f-mono)}
+.lbl{fill:var(--d-ink);font:200px var(--f-disp);text-anchor:middle}
+.lbls{fill:var(--d-dim);font:140px var(--f-mono);text-anchor:middle}
+.tiny{fill:var(--d-ink);font:110px var(--f-mono);text-anchor:middle}
+.fu{stroke:var(--d-ink);stroke-width:12}
+.ln{stroke:var(--light);stroke-width:55;fill:none;stroke-linecap:square}
+.sbg{fill:var(--d-bg)}
+.sm .dimt{font-size:80px}.sm .tiny{font-size:70px}.sm .lbl{font-size:130px}.sm .lbls{font-size:90px}
+
+@media (max-width:860px){
+  .cover{grid-template-columns:minmax(0,1fr);padding-block:32px 24px}
+  .body,.concept,.rooms,.elevs,.qs,.refgrid{grid-template-columns:minmax(0,1fr)}
+  .fig{border-right:0;border-bottom:1px solid var(--line)}
+  .concept>section+section,.qs>section+section{border-left:0;border-top:1px solid var(--line)}
+  .room:nth-child(odd),.elev:nth-child(odd){border-right:0}
+  .stamp{grid-template-columns:minmax(0,1fr)}
+  .stamp .no,.stamp .meta{border:0;padding-bottom:0}
+  .stamp h2{padding-top:4px}
+  .sw{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:no-preference){.seg button{transition:background .15s,color .15s}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+<defs>
+  <pattern id="mw" patternUnits="userSpaceOnUse" width="2400" height="1771"><image id="mimg" href="__MARBLE__" width="2400" height="1771" preserveAspectRatio="none"/></pattern>
+  <filter id="inv" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feColorMatrix type="matrix" values="-1.1 0 0 0 1.02  0 -1.1 0 0 1.02  0 0 -1.1 0 1.04  0 0 0 1 0"/></filter><pattern id="mb" patternUnits="userSpaceOnUse" width="2400" height="1771"><use href="#mimg" filter="url(#inv)"/></pattern>
+  <pattern id="oak" patternUnits="userSpaceOnUse" width="600" height="2800">
+    <rect width="600" height="2800" fill="#B98957"/>
+    <path d="M40 0 C 60 900 25 1800 50 2800 M150 0 C 165 700 140 1500 170 2800 M240 0 C 230 900 262 1900 245 2800 M330 0 C 352 800 318 1700 340 2800 M445 0 C 432 1000 470 1800 450 2800 M530 0 C 548 900 520 2000 540 2800" stroke="#A27242" stroke-width="9" fill="none" opacity=".75"/>
+    <path d="M95 0 C 105 1200 85 2000 100 2800 M390 0 C 402 1300 380 2100 395 2800" stroke="#C99A66" stroke-width="14" fill="none" opacity=".6"/>
+  </pattern>
+  <pattern id="rel" patternUnits="userSpaceOnUse" width="500" height="500">
+    <rect width="500" height="500" fill="#2A2B2D"/>
+    <path d="M20 60 q40 -30 90 5 t110 -10 M260 140 q50 30 110 -5 t100 20 M30 250 q60 40 130 0 t90 15 M280 330 q40 -40 100 0 t110 -5 M60 430 q50 30 120 -5 M300 470 q40 -20 90 10" stroke="#3B3C3F" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <path d="M140 120 q30 20 60 0 M390 240 q30 25 70 0 M190 380 q30 -20 70 5" stroke="#202123" stroke-width="12" fill="none" stroke-linecap="round"/>
+  </pattern>
+  <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#8C6A3A"/><stop offset=".5" stop-color="#CFAE72"/><stop offset="1" stop-color="#8C6A3A"/>
+  </linearGradient>
+  <pattern id="hatch" patternUnits="userSpaceOnUse" width="90" height="90" patternTransform="rotate(45)">
+    <rect width="90" height="90" fill="none"/><line x1="0" y1="0" x2="0" y2="90" stroke="#8A8A84" stroke-width="18"/>
+  </pattern>
+  <pattern id="tiles" patternUnits="userSpaceOnUse" width="1200" height="600" x="0" y="9327">
+    <rect width="1200" height="600" fill="none" stroke="#9C9A93" stroke-width="6" opacity=".55"/>
+  </pattern>
+</defs>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Проект «Белый мрамор»</div>
+    <div class="seg" role="group" aria-label="Вариант акцента">
+      <button id="v-green" type="button" data-v="green" aria-pressed="true"><span class="dot" style="background:#2F4235"></span>А · Зелёный</button>
+      <button id="v-wood" type="button" data-v="wood" aria-pressed="false"><span class="dot" style="background:linear-gradient(135deg,#B98957,#CFAE72)"></span>Б · Дерево + латунь</button>
+    </div>
+    <nav class="toc" aria-label="Листы альбома">
+      <a href="#concept">01 Концепция</a><a href="#measure">02 Обмерный план</a><a href="#furniture">03 Мебель</a><a href="#floors">04 Полы</a><a href="#walls">05 Стены</a><a href="#ceiling">06 Потолки и свет</a><a href="#power">07 Электрика</a><a href="#elevations">08 Развёртки</a><a href="#bath">09 Ванная</a><a href="#doors">10 Двери</a><a href="#rooms">11 Помещения</a><a href="#spec">12 Ведомость</a><a href="#open">13 Уточнить</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="cover">
+    <div>
+      <div class="eyebrow">Дизайн-проект отделки · этаж с лестницей</div>
+      <h1>Белый мрамор</h1>
+      <p class="lead">Один пол на весь этаж: белый мрамор без порогов от входной двери до ванной. Стены тёплого белого цвета, двери скрытые в цвет стены, плинтус утоплен. На этом фоне работают хаотичные световые линии в коридоре, точечный свет в комнатах, чёрная лестница и один акцент: <b id="accName">глубокий зелёный</b>.</p>
+    </div>
+    <div class="facts">
+      <div><span>Площадь пола</span><b id="fArea">—</b></div>
+      <div><span>Потолок</span><b>2,75 м</b></div>
+      <div><span>Помещений</span><b>7</b></div>
+      <div><span>Жильцы</span><b>2 взрослых</b></div>
+      <div><span>Стиль</span><b>минимализм</b></div>
+      <div><span>Бюджет</span><b>средний+</b></div>
+      <div><span>Стены</span><b>без изменений</b></div>
+      <div><span>Объём работ</span><b>отделка</b></div>
+    </div>
+  </section>
+
+  <!-- 01 -->
+  <article class="sheet" id="concept">
+    <div class="stamp"><div class="no">ЛИСТ 01</div><h2>Концепция и палитра</h2><div class="meta" id="vMeta">Вариант А</div></div>
+    <div class="concept">
+      <section>
+        <div class="eyebrow">База · общая для обоих вариантов</div>
+        <div class="prose" style="margin-top:10px">
+          <p>Дорогой минимализм держится на трёх правилах: одна плоскость пола, никаких видимых наличников и плинтусов, свет встроен в архитектуру, а не висит на ней.</p>
+          <p>Белый мрамор пола повторяется в ванной на стене за раковиной и в кухонной столешнице, поэтому этаж читается как одно целое. Чёрный появляется линейно: лестница, металл, тени у пола и потолка.</p>
+        </div>
+        <div class="sw" id="swBase"></div>
+      </section>
+      <section>
+        <div><span class="vtag" id="vTag">Вариант А · глубокий зелёный</span></div>
+        <div class="prose" style="margin-top:10px" id="vText"></div>
+        <div class="sw" id="swAcc"></div>
+      </section>
+    </div>
+  </article>
+
+  <!-- 02 -->
+  <article class="sheet" id="measure">
+    <div class="stamp"><div class="no">ЛИСТ 02</div><h2>Обмерный план</h2><div class="meta">М 1:100 · размеры в мм</div></div>
+    <div class="body">
+      <div class="fig"><div class="scroll" id="pMeasure"></div></div>
+      <div class="notes">
+        <div><h3>Как читать</h3><ul>
+          <li>Размеры помещений взяты с вашего плана. Толщины стен выведены из суммы размеров: 8712 и 11327 сходятся.</li>
+          <li>537 — толщина стены между залом и коридором, 410 — стена между кухней и залом.</li>
+          <li>Окна и проёмы привязаны по чертежу с точностью около ±100 мм. Перед заказом дверей и карнизов их нужно перемерить по месту.</li>
+        </ul></div>
+        <div class="legend">
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="wall"/></svg>Стены (без изменений)</div>
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="flr"/><rect x="0" y="7" width="34" height="8" class="glass" style="stroke-width:1"/></svg>Окно</div>
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="flr"/><path d="M4 20 V4 A16 16 0 0 1 20 20" class="thin" style="stroke-width:1.2"/></svg>Скрытая дверь, сторона открывания</div>
+        </div>
+        <div class="note">Высота дверных проёмов 2000 мм. Окно Спальни 2 нанесено по центру верхней стены, шириной как соседние окна (≈980 мм). Уточните его положение.</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 03 -->
+  <article class="sheet" id="furniture">
+    <div class="stamp"><div class="no">ЛИСТ 03</div><h2>План расстановки мебели</h2><div class="meta">М 1:100</div></div>
+    <div class="body">
+      <div class="fig"><div class="scroll" id="pFurn"></div></div>
+      <div class="notes">
+        <div><h3>Логика расстановки</h3><ul>
+          <li><b>Зал:</b> ТВ на стене спален между двумя скрытыми дверями, диван у стены коридора. До экрана около 3,3 м, это подходит для ТВ 75″.</li>
+          <li><b>Кухня:</b> Г-образная. Варочная панель с духовкой под ней на стене слева от входа, мойка под окном, на ней гарнитур заканчивается. Верхние шкафы на всю стену слева от входа. Холодильник у стены столовой, справа от прохода.</li>
+          <li><b>Спальня 1:</b> кровать 1800, два шкафа до потолка по сторонам двери, ТВ в простенке между окнами.</li>
+          <li><b>Спальня 2:</b> кровать 1600 изголовьем к левой стене, окно сбоку, шкаф 2,1 м у правой стены.</li>
+          <li><b>Коридор:</b> шкаф с нишей у входа, хозшкаф 1100 за лестницей.</li>
+        </ul></div>
+        <div class="note">Встроенная мебель (шкафы, кухня) идёт до потолка, фасады без ручек (push-to-open или фрезерованная ручка). Так шкафы читаются как стена.</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 04 -->
+  <article class="sheet" id="floors">
+    <div class="stamp"><div class="no">ЛИСТ 04</div><h2>План полов</h2><div class="meta">М 1:100</div></div>
+    <div class="body">
+      <div class="fig"><div class="scroll" id="pFloor"></div></div>
+      <div class="notes">
+        <div class="legend">
+          <div><svg viewBox="0 0 1200 800"><rect width="1200" height="800" fill="url(#mw)"/></svg>Кварцвинил клеевой «белый мрамор», весь этаж</div>
+          <div><svg viewBox="0 0 1200 800"><rect width="1200" height="800" fill="url(#mb)"/></svg>Кварцвинил «чёрный мрамор», проступи и подступенки</div>
+        </div>
+        <div><h3>Решения</h3><ul>
+          <li>Одна плоскость без порогов, включая проёмы и ванную. Стыки под полотнами дверей не нужны.</li>
+          <li>Клеевой кварцвинил на наливной пол вместо замкового: нет гула под ногами, нет компенсационных порогов, можно класть в ванной.</li>
+          <li>Рисунок мрамора взят с вашего образца. Плитки на нём квадратные, на плане принят размер около 600×600. Раскладка начинается от оси проёма зал–коридор, формат уточняется по артикулу.</li>
+          <li>Теневой плинтус скрытого монтажа: алюминиевый профиль заподлицо со стеной, чёрная тень 10 мм у пола.</li>
+          <li>В ванной под кварцвинилом обмазочная гидроизоляция с заведением на стены на 200 мм. Альтернатива: керамогранит 60×120 в похожий рисунок.</li>
+        </ul></div>
+        <div class="note">Лестница: проступи и подступенки из клеевого кварцвинила «чёрный мрамор» с чёрным алюминиевым носиком, в носик встроена LED-подсветка.</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 05 -->
+  <article class="sheet" id="walls">
+    <div class="stamp"><div class="no">ЛИСТ 05</div><h2>План отделки стен</h2><div class="meta" id="wMeta">М 1:100 · Вариант А</div></div>
+    <div class="body">
+      <div class="fig"><div class="scroll" id="pWalls"></div></div>
+      <div class="notes">
+        <div class="legend" id="wLegend"></div>
+        <div><h3>Основание</h3><ul>
+          <li>Машинная гипсовая штукатурка по маякам, отклонение не больше 1 мм на 2 м: под теневой плинтус, скрытые двери и боковой свет.</li>
+          <li>Шпаклёвка по стеклохолсту до уровня Q4, глубокоматовая моющаяся краска в 2 слоя.</li>
+          <li>Скрытые двери окрашиваются вместе со стеной, в той же краске.</li>
+        </ul></div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 06 -->
+  <article class="sheet" id="ceiling">
+    <div class="stamp"><div class="no">ЛИСТ 06</div><h2>План потолков и освещения</h2><div class="meta">М 1:100 · отм. потолка +2,700</div></div>
+    <div class="body">
+      <div class="fig"><div class="scroll" id="pCeil"></div></div>
+      <div class="notes">
+        <div class="legend">
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="sbg"/><line x1="3" y1="11" x2="31" y2="11" stroke="var(--light)" stroke-width="4"/></svg>Световая линия 35 мм, только коридор, хаотично, 3000 K</div>
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="sbg"/><circle cx="17" cy="11" r="6" fill="none" stroke="var(--light)" stroke-width="2"/><path d="M13 7 L21 15 M21 7 L13 15" stroke="var(--light)" stroke-width="1.5"/></svg>Подвесной светильник</div>
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="sbg"/><circle cx="17" cy="11" r="4" fill="var(--light)"/></svg>Встраиваемый LED-спот, чёрный, 3000 K</div>
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="sbg"/><rect x="2" y="6" width="30" height="10" fill="url(#hatch)" stroke="var(--d-ink)" stroke-width=".8"/></svg>Ниша для штор со скрытым карнизом</div>
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="sbg"/><rect x="3" y="3" width="28" height="16" fill="none" stroke="var(--d-dim)" stroke-width="1" stroke-dasharray="3 2"/></svg>Теневой профиль по периметру</div>
+          <div><svg viewBox="0 0 34 22"><rect width="34" height="22" class="sbg"/><rect x="7" y="5" width="12" height="12" fill="var(--d-bg)" stroke="var(--d-ink)" stroke-width="1.2"/></svg>Выключатель (буквы — группы)</div>
+        </div>
+        <div><h3>Длины световых линий</h3><table id="tLines"></table></div>
+        <div class="note">В комнатах только встраиваемые споты с глубоко утопленным диодом, они не слепят. Над изголовьями спотов нет. Все группы диммируемые, драйверы стоят в шкафах.</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 07 -->
+  <article class="sheet" id="power">
+    <div class="stamp"><div class="no">ЛИСТ 07</div><h2>План розеток и выводов</h2><div class="meta">М 1:100 · высоты от чистого пола</div></div>
+    <div class="body">
+      <div class="fig"><div class="scroll" id="pPower"></div></div>
+      <div class="notes">
+        <div class="tbl" style="padding:0;overflow-x:auto"><table id="tPower" style="min-width:0"></table></div>
+        <div class="note">Серия рамок одна на весь этаж (например, Werkel, Schneider Unica, Legrand Valena Life): белые на светлых стенах, чёрные на тёмных. Рамки ставятся строго по горизонтали с соседними выключателями.</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 08 -->
+  <article class="sheet" id="elevations">
+    <div class="stamp"><div class="no">ЛИСТ 08</div><h2>Развёртки стен</h2><div class="meta" id="eMeta">М 1:50 · Вариант А</div></div>
+    <div class="elevs">
+      <div class="elev wide"><h3>Зал · ТВ-стена (стена спален)</h3><div class="scroll" id="eZal"></div><p id="eZalTxt"></p></div>
+      <div class="elev wide"><h3>Кухня · нижняя и левая стены (развёртка через угол)</h3><div class="scroll" id="eKit"></div><p>Варочная панель с духовкой под ней стоит на стене слева от входа, дальше угол и мойка под окном, на ней гарнитур заканчивается. Верхние шкафы висят на всю стену слева от входа. Холодильник стоит у стены столовой, справа от прохода, и на развёртку не попадает. Столешница на высоте 900 мм.</p></div>
+    </div>
+  </article>
+
+  <!-- 09 -->
+  <article class="sheet" id="bath">
+    <div class="stamp"><div class="no">ЛИСТ 09</div><h2>Ванная по референсу</h2><div class="meta">М 1:25 · 1800 × 2000</div></div>
+    <div class="refgrid">
+      <figure style="margin:0"><img src="__REF__" alt="Референс ванной: тёмная рельефная стена, белый мрамор за раковиной и на полу, тумба из дуба, круглое зеркало с подсветкой, подвесной чёрный унитаз"><figcaption class="eyebrow" style="margin-top:8px">Ваш референс</figcaption></figure>
+      <div>
+        <h3 style="font-size:18px;margin-bottom:10px">Что берём из референса</h3>
+        <ol>
+          <li>Стена за раковиной из белого мрамора того же рисунка, что пол этажа: керамогранит 60×120 или 120×278 без видимых швов.</li>
+          <li>Короб инсталляции и остальные стены в тёмной рельефной плитке (графит). Короб выступает на 200 мм.</li>
+          <li>Вертикальная LED-линия в углу между мрамором и коробом, от пола до потолка.</li>
+          <li>Подвесная тумба из дуба с белой раковиной и круглое зеркало Ø600 с контурной подсветкой.</li>
+          <li>Подвесной унитаз и клавиша чёрные матовые, чёрные накладные споты на потолке.</li>
+          <li>Вместо душевой кабины ванна 1700×750 с экраном в мраморе и стеклянной шторкой 900 в чёрном профиле. Душевая стойка с тропическим душем.</li>
+        </ol>
+        <p class="note" style="margin-top:14px" id="bathVar"></p>
+      </div>
+    </div>
+    <div class="elevs" style="border-top:1px solid var(--line)">
+      <div class="elev"><h3>План ванной</h3><div class="scroll" id="bPlan"></div></div>
+      <div class="elev"><h3>Стена А · раковина и унитаз</h3><div class="scroll" id="bA"></div></div>
+      <div class="elev"><h3>Стена Б · ванна</h3><div class="scroll" id="bB"></div></div>
+      <div class="elev"><h3>Стены В и Г · дверь и полотенцесушитель</h3><div class="prose" style="font-size:14px"><p><b>Левая стена (дверь):</b> рельефная плитка графит. Дверь скрытая, открывается в коридор. Со стороны коридора полотно заподлицо и окрашено в цвет стены, со стороны ванной откосы отделаны плиткой.</p><p><b>Правая стена:</b> рельефная плитка, полотенцесушитель 420×800 между унитазом и ванной, высота низа 600.</p><p><b>Потолок:</b> натяжной матовый белый с теневым примыканием, 4 накладных спота (над ванной IP65), вытяжной вентилятор с обратным клапаном.</p></div></div>
+    </div>
+  </article>
+
+  <!-- 10 -->
+  <article class="sheet" id="doors">
+    <div class="stamp"><div class="no">ЛИСТ 10</div><h2>Ведомость дверей и проёмов</h2><div class="meta">Скрытый монтаж</div></div>
+    <div class="tbl"><table id="tDoors"></table></div>
+    <div class="notes" style="padding-top:0"><div class="note">Проёмы высотой 2000 мм. Коробка скрытой двери забирает около 35 мм с каждой стороны и около 50 мм сверху, поэтому полотно выходит примерно 1950 мм. Точные размеры полотен даёт поставщик после замера.</div></div>
+  </article>
+
+  <!-- 11 -->
+  <article class="sheet" id="rooms">
+    <div class="stamp"><div class="no">ЛИСТ 11</div><h2>Решения по помещениям</h2><div class="meta" id="rMeta">Вариант А</div></div>
+    <div class="rooms" id="roomCards"></div>
+  </article>
+
+  <!-- 12 -->
+  <article class="sheet" id="spec">
+    <div class="stamp"><div class="no">ЛИСТ 12</div><h2>Ведомость отделочных материалов</h2><div class="meta" id="sMeta">Средний+ · Вариант А</div></div>
+    <div class="tbl"><table id="tSpec"></table></div>
+    <div class="notes" style="padding-top:0"><div class="note">Количества посчитаны по плану, запас уже включён. Бренды даны как ориентир уровня «средний+», конкретные артикулы выбираются по образцам вживую, особенно мрамор и оттенок зелёного.</div></div>
+  </article>
+
+  <!-- 13 -->
+  <article class="sheet" id="open">
+    <div class="stamp"><div class="no">ЛИСТ 13</div><h2>Что уточнить и порядок работ</h2><div class="meta">до начала работ</div></div>
+    <div class="qs">
+      <section>
+        <h3 style="font-size:18px">Уточнить по месту</h3>
+        <ol>
+          <li><b>Положение окна в Спальне 2.</b> Нанесено по центру верхней стены, шириной ≈980 мм. Если окно смещено, поправлю нишу для штор и споты.</li>
+          <li><b>Верхние шкафы на кухне.</b> «Стену слева от входа» я понял как стену с варочной панелью: она слева, если входить из зала. Если имелась в виду другая стена, напишите.</li>
+          <li><b>Формат плитки кварцвинила.</b> По образцу плитки квадратные, на плане принято 600×600. Нужен артикул или размер.</li>
+          <li><b>Проём зал → коридор.</b> Принят 1148 мм, без полотна.</li>
+          <li><b>Лестница:</b> направление подъёма и число ступеней. На плане марш 3140 × 1000.</li>
+          <li><b>Высота подоконника на кухне.</b> Мойка стоит под окном, столешница на 900 мм.</li>
+          <li><b>Ширина ванной в чистоте</b> после плитки: ванна 1700 проходит при ширине от 1720 мм.</li>
+          <li><b>Вентиляция ванной:</b> нужен рабочий вытяжной канал.</li>
+        </ol>
+      </section>
+      <section>
+        <h3 style="font-size:18px">Порядок работ</h3>
+        <ol>
+          <li>Разметка по проекту: розетки, выводы, световые линии, ниши для штор, закладные под инсталляцию и тумбу.</li>
+          <li>Электрика и слаботочка, сантехнические трассы, гидроизоляция ванной.</li>
+          <li>Монтаж скрытых коробок дверей и профилей теневого плинтуса <i>до</i> штукатурки.</li>
+          <li>Машинная штукатурка, стяжка, затем наливной пол.</li>
+          <li>Плитка в ванной, монтаж инсталляции и экрана ванны.</li>
+          <li>Шпаклёвка Q4, грунт, первый слой краски.</li>
+          <li>Натяжные потолки со световыми линиями, теневым профилем и нишами.</li>
+          <li>Клеевой кварцвинил, облицовка ступеней.</li>
+          <li>Финишный слой краски, навеска полотен, мебель, розетки, светильники.</li>
+        </ol>
+      </section>
+    </div>
+    <details class="src"><summary>Исходный план (ваш чертёж)</summary><img src="__PLAN__" alt="Исходная планировка этажа с размерами и красными пометками"></details>
+  </article>
+</main>
+
+<script>
+(function(){
+const VIEW='-1700 -1350 11750 14250';
+const ROOMS=[
+  {id:'dining',n:'Обеденная',x:0,y:0,w:2346,h:3650,lx:1173,ly:3250},
+  {id:'kitchen',n:'Кухня',x:0,y:3750,w:2346,h:5223,lx:1150,ly:4650},
+  {id:'bed2',n:'Спальня 2',x:2766,y:0,w:2692,h:4644,lx:3980,ly:3250},
+  {id:'bed1',n:'Спальня 1',x:5578,y:0,w:3134,h:4644,lx:7150,ly:3450},
+  {id:'zal',n:'Зал',x:2766,y:4764,w:5946,h:4026,lx:5720,ly:6200},
+  {id:'cor',n:'Коридор',x:0,y:9327,w:6800,h:2000,lx:1150,ly:10650},
+  {id:'bath',n:'Ванная',x:6912,y:9327,w:1800,h:2000,lx:7760,ly:10290}
+];
+const OPEN=[
+  {id:'П1',x:560,y:3650,w:960,h:100},
+  {id:'П3',x:2346,y:7600,w:420,h:890},
+  {id:'Д2',x:3800,y:4644,w:800,h:120},
+  {id:'Д1',x:6800,y:4644,w:800,h:120},
+  {id:'П2',x:3154,y:8790,w:1148,h:537},
+  {id:'Д4',x:6800,y:9805,w:112,h:700},
+  {id:'Д0',x:-500,y:9927,w:500,h:920,ext:1}
+];
+const WIN=[['t',800,1760],['t',3620,4600],['l',1294,2476],['l',4288,5388],['l',6877,7944],['t',6528,7520],['r',663,1860],['r',3074,4013],['r',5275,6148],['r',7281,8219]];
+const SWING=[
+  {h:[3800,4644],l:[3800,3844],e:[4600,4644]},
+  {h:[6800,4644],l:[6800,3844],e:[7600,4644]},
+  {h:[6800,9805],l:[6100,9805],e:[6800,10505]},
+  {h:[-500,10847],l:[-1420,10847],e:[-500,9927]}
+];
+const STAIR={x:2448,y:10327,w:3140,h:1000,n:12};
+
+const V={
+  green:{tag:'Вариант А · глубокий зелёный',short:'Вариант А',acc:'глубокий зелёный',
+    kit:'#2F4235',chair:'#2F4235',table:'url(#mw)',cred:'#1E1E1E',metal:'#151515',zalWall:'#2F4235',head:'#2F4235',niche:'#2F4235',
+    text:'<p>Глубокий зелёный, почти чёрный при вечернем свете, рядом с белым мрамором выглядит дорого и спокойно. Он стоит на трёх больших плоскостях: ТВ-стена в зале вместе со скрытыми дверями, стена за изголовьем в Спальне 1 и нижние фасады кухни.</p><p>Металл везде чёрный матовый. Мягкий акцент дают бархат на стульях и подушках. Дерево только в тумбе ванной, как в референсе.</p>',
+    bath:'Вариант А: смесители, душевая стойка, полотенцесушитель и клавиша чёрные матовые, как в референсе. Зелёный только в текстиле: полотенца и коврик.'},
+  wood:{tag:'Вариант Б · дерево + латунь',short:'Вариант Б',acc:'тёплое дерево с латунью',
+    kit:'url(#oak)',chair:'#1E1E1E',table:'url(#oak)',cred:'url(#oak)',metal:'url(#brass)',zalWall:'#F2F0EB',head:'url(#oak)',niche:'url(#oak)',
+    text:'<p>Натуральный дуб в шпоне тёплого медового оттенка, как тумба в референсе ванной, плюс матовая брашированная латунь. Дерево стоит панелями на всю высоту: в зале между дверями спален и за изголовьем в Спальне 1. Нижние фасады кухни тоже из дуба.</p><p>Латунь только в точках контакта: смесители, ручки, подвес над столом, бра. Стены и двери белые, чёрный остаётся в лестнице, ТВ-консоли и стульях.</p>',
+    bath:'Вариант Б: смесители, душевая стойка, полотенцесушитель и клавиша из брашированной латуни. Тумба из дуба, рельеф графит, мрамор как в референсе.'}
+};
+let cur='green';
+try{const s=localStorage.getItem('bm-variant'); if(s==='green'||s==='wood') cur=s;}catch(e){}
+
+const $=id=>document.getElementById(id);
+const R=(x,y,w,h,a='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" ${a}/>`;
+const T=(x,y,t,c='lbls',a='')=>`<text x="${x}" y="${y}" class="${c}" ${a}>${t}</text>`;
+const fmt=n=>n.toLocaleString('ru-RU',{minimumFractionDigits:1,maximumFractionDigits:1});
+const area=r=>r.w*r.h/1e6;
+const svg=(inner,vb=VIEW,label='')=>`<svg viewBox="${vb}" role="img" aria-label="${label}" xmlns="http://www.w3.org/2000/svg"><rect x="-99999" y="-99999" width="199999" height="199999" class="sbg"/>${inner}</svg>`;
+
+function windowsSvg(){
+  return WIN.map(([s,a,b])=>{
+    if(s==='t') return R(a,-500,b-a,500,'class="glass"')+`<line x1="${a}" y1="-250" x2="${b}" y2="-250" class="hair"/>`;
+    if(s==='l') return R(-500,a,500,b-a,'class="glass"')+`<line x1="-250" y1="${a}" x2="-250" y2="${b}" class="hair"/>`;
+    return R(8712,a,500,b-a,'class="glass"')+`<line x1="8962" y1="${a}" x2="8962" y2="${b}" class="hair"/>`;
+  }).join('');
+}
+function swings(){
+  return SWING.map(s=>{
+    const [hx,hy]=s.h,[lx,ly]=s.l,[ex,ey]=s.e; const r=Math.hypot(lx-hx,ly-hy);
+    const cr=(ex-hx)*(ly-hy)-(ey-hy)*(lx-hx); const sw=cr>0?1:0;
+    return `<line x1="${hx}" y1="${hy}" x2="${lx}" y2="${ly}" class="thin" style="stroke-width:22"/><path d="M${ex} ${ey} A${r} ${r} 0 0 ${sw} ${lx} ${ly}" class="hair" fill="none" stroke-dasharray="40 30"/>`;
+  }).join('');
+}
+function stairs(fill){
+  const s=STAIR; let o=R(s.x,s.y,s.w,s.h,`fill="${fill||'var(--d-soft)'}" class="fu"`);
+  const step=s.w/s.n; for(let i=1;i<s.n;i++){o+=`<line x1="${s.x+i*step}" y1="${s.y}" x2="${s.x+i*step}" y2="${s.y+s.h}" stroke="${fill?'#5a5b5d':'var(--d-ink)'}" stroke-width="10"/>`;}
+  o+=`<path d="M${s.x+200} ${s.y+500} H${s.x+s.w-260}" stroke="${fill?'#E9E7E2':'var(--d-ink)'}" stroke-width="20" fill="none"/><path d="M${s.x+s.w-420} ${s.y+380} L${s.x+s.w-220} ${s.y+500} L${s.x+s.w-420} ${s.y+620}" stroke="${fill?'#E9E7E2':'var(--d-ink)'}" stroke-width="20" fill="none"/>`;
+  o+=T(s.x+s.w/2,s.y+s.h-110,'вверх (направление уточнить)','tiny',`style="fill:${fill?'#E9E7E2':'var(--d-ink)'};font-size:95px"`);
+  return o;
+}
+function base(o={}){
+  const fl=o.floor||(()=>'var(--d-floor)');
+  let s=R(-500,-500,9712,12327,'class="wall"');
+  ROOMS.forEach(r=>s+=R(r.x,r.y,r.w,r.h,`fill="${fl(r)}"`));
+  OPEN.forEach(p=>s+=R(p.x,p.y,p.w,p.h,`fill="${p.ext?'var(--d-bg)':fl(null)}"`));
+  s+=windowsSvg();
+  if(!o.noStairs) s+=stairs(o.stairFill);
+  s+=swings();
+  return s;
+}
+function labels(small,col){
+  const st=col?`style="fill:${col}"`:'';
+  return ROOMS.map(r=>small?T(r.lx,r.ly,r.n,'lbls',st):T(r.lx,r.ly,r.n,'lbl',st)+T(r.lx,r.ly+200,fmt(area(r))+' м²','lbls',st)).join('');
+}
+function dimH(x1,x2,y,t){return `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" class="dim"/><path d="M${x1-50} ${y+50} L${x1+50} ${y-50} M${x2-50} ${y+50} L${x2+50} ${y-50}" class="dim" style="stroke-width:16"/>`+T((x1+x2)/2,y-50,t,'dimt','text-anchor="middle"');}
+function dimV(y1,y2,x,t){return `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" class="dim"/><path d="M${x-50} ${y1+50} L${x+50} ${y1-50} M${x-50} ${y2+50} L${x+50} ${y2-50}" class="dim" style="stroke-width:16"/>`+T(x-50,(y1+y2)/2,t,'dimt',`text-anchor="middle" transform="rotate(-90 ${x-50} ${(y1+y2)/2})"`);}
+
+/* 02 measure */
+function measure(){
+  let s=base();
+  s+=dimH(0,8712,-900,'8712');
+  s+=dimV(0,11327,-1050,'11327');
+  ROOMS.forEach(r=>{
+    s+=dimH(r.x,r.x+r.w,r.y+330,String(r.id==='cor'?'6800':r.w));
+    s+=dimV(r.y,r.y+r.h,r.x+330,String(r.h));
+    s+=T(r.x+r.w/2,r.y+r.h/2,r.n,'lbl')+T(r.x+r.w/2,r.y+r.h/2+200,fmt(area(r))+' м²','lbls');
+  });
+  s+=T(2556,6600,'410','dimt','text-anchor="middle" style="fill:var(--d-bg)" transform="rotate(-90 2556 6600)"');
+  s+=T(5600,9110,'537','dimt','text-anchor="middle" style="fill:var(--d-bg)"');
+  s+=T(3728,9110,'проём 1148','dimt','text-anchor="middle"');
+  s+=T(2200,7350,'проём 890','dimt','text-anchor="end"');
+  s+=T(1040,3610,'проём ≈960','dimt','text-anchor="middle"');
+  s+=T(4200,4560,'≈800','dimt','text-anchor="middle"');
+  s+=T(7200,4560,'≈800','dimt','text-anchor="middle"');
+  s+=T(6640,10160,'≈700','dimt','text-anchor="end"');
+  s+=dimV(9327,9927,750,'600');
+  s+=dimV(9927,10847,750,'920');
+  s+=dimH(STAIR.x,STAIR.x+STAIR.w,STAIR.y-120,'3140');
+  s+=T(5800,10900,'1000','dimt','text-anchor="start"');
+  return svg(s,VIEW,'Обмерный план этажа');
+}
+
+/* 03 furniture */
+function furnItems(v){
+  const n='var(--d-furn)',dk='#1E1E1E',wh='#F4F2EE',gr='#D2CFC8';
+  return [
+    // dining
+    ['r',1796,0,550,400,wh,'витрина'],
+    ['c',1173,1825,550,v.table],
+    ['r',948,900,450,450,v.chair],['r',948,2300,450,450,v.chair],['r',248,1600,450,450,v.chair],['r',1648,1600,450,450,v.chair],
+    // kitchen
+    ['r',1620,3750,700,650,v.kit,'холод.'],
+    ['r',0,6877,600,2096,v.kit],['r',600,8373,1200,600,v.kit],
+    ['r',80,7160,440,500,'#BFC3C6','мойка'],['r',900,8423,600,500,dk],
+    ['u',0,8623,2346,350],
+    // zal
+    ['r',4220,6150,3000,2200,'var(--d-soft)'],
+    ['r',4720,4764,2000,400,dk,'ТВ-консоль'],
+    ['r',4420,7790,2600,1000,gr],['r',4420,8590,2600,200,'#BDB9B1'],['r',4420,7790,200,1000,'#BDB9B1'],['r',6820,7790,200,1000,'#BDB9B1'],
+    ['r',5120,6850,1200,600,dk],
+    ['r',7650,5450,850,850,gr],
+    ['r',2766,5100,450,2200,v.cred,'комод'],
+    // bed1
+    ['r',5578,1100,2100,1800,wh],['r',5578,1100,120,1800,v.head==='#2F4235'?gr:'url(#oak)'],['r',5760,1200,420,760,n],['r',5760,2040,420,760,n],['r',6500,1100,1178,1800,gr],
+    ['r',5578,600,400,450,dk],['r',5578,2950,400,450,dk],
+    ['r',5578,4044,1122,600,wh,'шкаф'],['r',7700,4044,1012,600,wh,'шкаф'],
+    ['r',8652,1917,60,1100,dk],
+    // bed2
+    ['r',2766,700,2100,1600,wh],['r',2766,700,110,1600,gr],['r',2920,790,420,680,n],['r',2920,1530,420,680,n],['r',3700,700,1166,1600,gr],
+    ['r',2766,250,400,400,dk],['r',2766,2350,400,400,dk],
+    ['r',4858,2500,600,2144,wh,'шкаф'],
+    // corridor
+    ['r',0,9327,1400,600,wh,'шкаф'],['r',1400,9327,800,400,v.niche,''],
+    ['r',5700,10727,1100,600,wh,'хоз.'],
+    // bath
+    ['r',7712,9327,1000,200,'url(#rel)'],['r',6962,9327,700,460,'url(#oak)'],['e',7312,9560,220,150,'#FFFFFF'],
+    ['e',8212,9797,180,270,dk],
+    ['r',6912,10577,1700,750,'#FFFFFF'],['r',7012,10677,1500,550,'#EEF1F3'],['r',8612,10577,100,750,'url(#mw)'],
+    ['l',7812,10577,8712,10577],
+    ['r',8672,10100,40,420,v.metal]
+  ];
+}
+function drawItems(items){
+  return items.map(it=>{
+    const [t]=it;
+    if(t==='r'){const [,x,y,w,h,f,lab]=it; return R(x,y,w,h,`fill="${f}" class="fu"`)+(lab?T(x+w/2,y+h/2+40,lab,'tiny',`style="fill:${f==='#1E1E1E'||String(f).includes('2F4235')||f==='url(#oak)'?'#fff':'#1B1C1A'}"`):'');}
+    if(t==='c'){const [,cx,cy,r,f]=it; return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${f}" class="fu"/>`;}
+    if(t==='e'){const [,cx,cy,rx,ry,f]=it; return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${f}" class="fu"/>`;}
+    if(t==='u'){const [,x,y,w,h]=it; return R(x,y,w,h,'fill="none" stroke="var(--d-ink)" stroke-width="12" stroke-dasharray="60 40"')+T(x+w/2,y-300,'верхние шкафы','tiny');}
+    if(t==='l'){const [,x1,y1,x2,y2]=it; return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#111" stroke-width="40"/>`;}
+  }).join('');
+}
+function furniture(v){
+  let s=base({stairFill:'url(#mb)'})+drawItems(furnItems(v));
+  s+=`<circle cx="1060" cy="8673" r="150" fill="none" stroke="#9aa" stroke-width="10"/><circle cx="1340" cy="8673" r="120" fill="none" stroke="#9aa" stroke-width="10"/>`;
+  return svg(s+labels(),VIEW,'План расстановки мебели');
+}
+
+/* 04 floors */
+function floors(){
+  let s=base({floor:()=> 'url(#mw)',stairFill:'url(#mb)'});
+  s+=stairs('url(#mb)');
+  s+=`<path d="M3728 10050 V8600" stroke="var(--d-dim)" stroke-width="16" stroke-dasharray="80 50"/>`+T(3880,8500,'ось раскладки','tiny','text-anchor="start"');
+  s+=labels(false,'#1B1C1A');
+  s+=T(7812,11000,'гидроизоляция','tiny','style="fill:#333"');
+  return svg(s,VIEW,'План полов');
+}
+
+/* 05 walls */
+const FIN={
+  W:{n:'Тёплый белый',c:'NCS S 0502-Y · глубокоматовая',f:'#F2F0EB'},
+  G:{n:'Светло-серый тёплый',c:'NCS S 1502-Y',f:'#D8D5CE'},
+  GR:{n:'Глубокий зелёный',c:'NCS S 7020-G10Y (подбирать по выкраске)',f:'#2F4235'},
+  OAK:{n:'Шпон дуба, матовый лак',c:'панели на всю высоту',f:'url(#oak)'},
+  M:{n:'Керамика «белый мрамор»',c:'фартук, ванная',f:'url(#mw)'},
+  D:{n:'Рельефная плитка графит',c:'ванная',f:'url(#rel)'}
+};
+function finList(v){
+  const L=[];
+  ROOMS.forEach(r=>{ if(r.id!=='bath') ['t','r','b','l'].forEach(sd=>L.push([r.id,sd,null,null,'W'])); });
+  L.push(['kitchen','b',0,1800,'M'],['kitchen','l',6877,8973,'M']);
+  L.push(['bed2','l',null,null,'G']);
+  if(v==='green'){L.push(['bed1','l',null,null,'GR'],['zal','t',null,null,'GR']);}
+  else{L.push(['bed1','l',800,3200,'OAK'],['zal','t',4650,6750,'OAK']);}
+  L.push(['bath','t',6912,7712,'M'],['bath','t',7712,8712,'D'],['bath','r',null,null,'D'],['bath','b',null,null,'M'],['bath','l',null,null,'D']);
+  return L;
+}
+function walls(v){
+  let s=base();
+  const t=130, rm=Object.fromEntries(ROOMS.map(r=>[r.id,r]));
+  finList(v).forEach(([id,sd,a,b,k])=>{
+    const r=rm[id]; const f=FIN[k].f;
+    if(sd==='t'){a=a??r.x;b=b??r.x+r.w; s+=R(a,r.y,b-a,t,`fill="${f}" class="hair"`);}
+    if(sd==='b'){a=a??r.x;b=b??r.x+r.w; s+=R(a,r.y+r.h-t,b-a,t,`fill="${f}" class="hair"`);}
+    if(sd==='l'){a=a??r.y;b=b??r.y+r.h; s+=R(r.x,a,t,b-a,`fill="${f}" class="hair"`);}
+    if(sd==='r'){a=a??r.y;b=b??r.y+r.h; s+=R(r.x+r.w-t,a,t,b-a,`fill="${f}" class="hair"`);}
+  });
+  if(v==='green'){s+=R(3800,4764,800,t,'fill="#2F4235"')+R(6800,4764,800,t,'fill="#2F4235"');}
+  s+=labels();
+  return svg(s,VIEW,'План отделки стен');
+}
+
+/* 06 ceiling */
+const LINES=[
+  {room:'Коридор',pts:[[0,11000],[2400,9327]]},
+  {room:'Коридор',pts:[[600,11327],[3600,9327]]},
+  {room:'Коридор',pts:[[1600,9327],[2448,10750]]},
+  {room:'Коридор',pts:[[3000,9327],[6800,10500]]},
+  {room:'Коридор',pts:[[4300,10327],[5400,9327]]},
+  {room:'Коридор',pts:[[5588,10600],[6800,9600]]}
+];
+const lenOf=p=>p.reduce((a,c,i)=>i?a+Math.hypot(c[0]-p[i-1][0],c[1]-p[i-1][1]):0,0);
+const PEND=[[1173,1825],[5778,825],[5778,3175],[2966,450],[2966,2550]];
+const SPOT=[
+  [3540,5560],[4980,5560],[6420,5560],[7860,5560],[3540,6777],[4980,6777],[6420,6777],[7860,6777],[3540,7994],[4980,7994],[6420,7994],[7860,7994],
+  [850,7100],[850,7900],[1350,8200],[1173,4900],[1173,6000],[1800,7300],
+  [500,1000],[1846,1000],[500,2650],[1846,2650],
+  [8050,1000],[8050,2000],[8050,3000],[6200,3650],[7200,3650],[7000,550],
+  [5150,900],[5150,1900],[4300,3000],[4300,4000],[3300,3000],[3300,4000],
+  [7312,9850],[8212,10260],[7400,10950],[8250,10950]
+];
+const NICHE=[[0,0,150,3650],[150,0,2196,150],[2766,0,2692,150],[5578,0,3134,150],[8562,150,150,4494],[8562,4764,150,4026]];
+const SW=[[2290,7450,'аб'],[460,3540,'вг'],[2830,7450,'а'],[3050,8680,'аб'],[4680,4530,'а'],[2830,850,'а'],[7650,4530,'а'],[5650,1150,'а'],[60,9760,'аб'],[6690,10600,'вгд']];
+function ceiling(){
+  let s=base({noStairs:true});
+  s+=R(STAIR.x,STAIR.y,STAIR.w,STAIR.h,'fill="none" class="hair" stroke-dasharray="60 40"')+T(STAIR.x+STAIR.w/2,STAIR.y+560,'проём лестницы','tiny');
+  ROOMS.forEach(r=>s+=R(r.x+60,r.y+60,r.w-120,r.h-120,'fill="none" stroke="var(--d-dim)" stroke-width="10" stroke-dasharray="70 50"'));
+  NICHE.forEach(([x,y,w,h])=>s+=R(x,y,w,h,'fill="url(#hatch)" class="hair"'));
+  LINES.forEach(l=>s+=`<polyline points="${l.pts.map(p=>p.join(',')).join(' ')}" class="ln"/>`);
+  s+=`<line x1="0" y1="8600" x2="2346" y2="8600" stroke="var(--light)" stroke-width="22" stroke-dasharray="60 40"/>`;
+  s+=`<line x1="7712" y1="9527" x2="7712" y2="9527" stroke="var(--light)" stroke-width="120" stroke-linecap="round"/>`;
+  for(let i=0;i<STAIR.n;i++){const x=STAIR.x+STAIR.w/STAIR.n*(i+.5); s+=`<line x1="${x}" y1="${STAIR.y+80}" x2="${x}" y2="${STAIR.y+STAIR.h-80}" stroke="var(--light)" stroke-width="16" opacity=".8"/>`;}
+  PEND.forEach(([x,y])=>s+=`<circle cx="${x}" cy="${y}" r="150" fill="var(--d-bg)" stroke="var(--light)" stroke-width="30"/><path d="M${x-100} ${y-100} L${x+100} ${y+100} M${x+100} ${y-100} L${x-100} ${y+100}" stroke="var(--light)" stroke-width="22"/>`);
+  SPOT.forEach(([x,y])=>s+=`<circle cx="${x}" cy="${y}" r="80" fill="var(--light)"/>`);
+  SW.forEach(([x,y,g])=>s+=R(x-70,y-70,140,140,'fill="var(--d-bg)" stroke="var(--d-ink)" stroke-width="16"')+T(x,y-110,g,'tiny'));
+  s+=T(1173,8760,'подсветка под шкафами','tiny','text-anchor="middle"');
+  s+=T(4018,11080,'LED в носиках ступеней','tiny');
+  s+=labels(true);
+  return svg(s,VIEW,'План потолков и освещения');
+}
+function linesTable(){
+  const by={}; LINES.forEach(l=>by[l.room]=(by[l.room]||0)+lenOf(l.pts));
+  let tot=0, rows=Object.entries(by).map(([k,v])=>{tot+=v;return `<tr><td>${k}</td><td class="num" style="text-align:right">${fmt(v/1000)} м</td></tr>`}).join('');
+  return rows+`<tr><td><b>Итого</b></td><td class="num" style="text-align:right"><b>${fmt(tot/1000)} м</b></td></tr><tr><td style="color:var(--muted)">+ ванная: вертикальная линия</td><td class="num" style="text-align:right">2,7 м</td></tr>`;
+}
+
+/* 07 power */
+const PWR=[
+  ['Кухня',2000,3750,300,'Холодильник'],['Кухня',2346,4700,1100,'У холодильника, 2-я'],['Кухня',1000,8973,300,'Духовой шкаф, 16 А'],['Кухня',1300,8973,300,'Варочная панель, вывод 32 А'],
+  ['Кухня',1200,8973,2200,'Вытяжка (в верхнем модуле)'],['Кухня',0,8150,300,'Посудомоечная машина'],['Кухня',400,8973,1100,'Над столешницей, 2-я'],['Кухня',1650,8973,1100,'Над столешницей, 2-я'],
+  ['Кухня',0,8550,1100,'Над столешницей в углу, 2-я'],['Кухня',600,8973,1450,'Подсветка под шкафами'],
+  ['Обеденная',2346,1500,300,'Общая'],['Обеденная',1900,400,900,'Витрина, подсветка'],
+  ['Зал',5720,4764,1100,'За ТВ: 2-я + LAN + антенна'],['Зал',5000,4764,300,'Консоль, 2-я'],['Зал',6440,4764,300,'Консоль, 2-я'],
+  ['Зал',4300,8790,300,'У дивана'],['Зал',7140,8790,300,'У дивана + USB'],['Зал',8712,6700,300,'Торшер у кресла'],['Зал',2766,6200,300,'Комод'],['Зал',8712,4900,2650,'Электрокарниз'],
+  ['Спальня 1',5578,900,600,'Тумба: 2-я + USB-C'],['Спальня 1',5578,3200,600,'Тумба: 2-я + USB-C'],['Спальня 1',8712,2467,1100,'ТВ + LAN'],['Спальня 1',8712,250,2650,'Электрокарниз'],['Спальня 1',8712,4300,300,'Общая'],
+  ['Спальня 2',2766,450,600,'Тумба + USB-C'],['Спальня 2',2766,2550,600,'Тумба + USB-C'],['Спальня 2',5458,1500,1100,'ТВ + LAN (опция)'],['Спальня 2',3700,4644,300,'Общая'],
+  ['Коридор',1800,9327,1000,'Ниша: зарядка'],['Коридор',3000,9327,300,'Уборка'],['Коридор',6800,11027,300,'Хозшкаф: пылесос'],
+  ['Ванная',6912,9650,1100,'Фен, IP44'],['Ванная',8712,10310,600,'Полотенцесушитель (электр.)'],['Ванная',7312,9327,1700,'Вывод на зеркало']
+];
+function power(){
+  let s=base({stairFill:'var(--d-soft)'});
+  PWR.forEach((p,i)=>{const [,x,y,h]=p; s+=`<circle cx="${x}" cy="${y}" r="110" fill="${h>=1500?'var(--d-ink)':'var(--d-bg)'}" stroke="var(--d-ink)" stroke-width="18"/>`+T(x,y+40,i+1,'tiny',h>=1500?'style="fill:var(--d-bg);font-size:100px"':'style="font-size:100px"');});
+  s+=labels(true);
+  return svg(s,VIEW,'План розеток');
+}
+function powerTable(){
+  let last='',out='<tr><th>№</th><th>Назначение</th><th style="text-align:right">h, мм</th></tr>';
+  PWR.forEach((p,i)=>{ if(p[0]!==last){out+=`<tr class="grp"><td colspan="3">${p[0]}</td></tr>`;last=p[0];} out+=`<tr><td class="num">${i+1}</td><td>${p[4]}</td><td class="num" style="text-align:right">${p[3]}</td></tr>`;});
+  return out;
+}
+
+/* 08 elevations — helper */
+function elevFrame(W,H,inner,label){
+  const vb=`-300 -400 ${W+850} ${H+800}`;
+  const y=v=>H-v;
+  return svg(`<g>${inner}</g><line x1="-200" y1="${H}" x2="${W+200}" y2="${H}" stroke="var(--d-ink)" stroke-width="18"/>`,vb,label);
+}
+function eZal(v){
+  const W=5946,H=2700, y=h=>H-h, X=x=>x-2766;
+  let s=R(0,0,W,H,`fill="${v==='green'?'#2F4235':'#F2F0EB'}" class="hair"`);
+  if(v==='wood') s+=R(X(4650),0,2100,H,'fill="url(#oak)" class="hair"');
+  [[3800,4600],[6800,7600]].forEach(([a,b])=>{s+=R(X(a),y(2000),b-a,2000,`fill="none" stroke="${v==='green'?'#1d2a21':'#BDBAB2'}" stroke-width="10"`);});
+  s+=R(0,y(50),W,50,'fill="#111"');
+  s+=R(X(4720),y(600),2000,350,'fill="#1A1A1A"');
+  s+=R(X(4885),y(1860),1670,960,'fill="#0F0F10" stroke="#333" stroke-width="10"');
+  s+=R(0,-50,W,50,'fill="var(--d-soft)"');
+  [3540,4980,6420,7860].forEach(x=>s+=R(X(x)-40,0,80,40,'fill="#151515"'));
+  s+=dimH(X(3800),X(4600),y(2000)-120,'≈800')+dimH(X(6800),X(7600),y(2000)-120,'≈800')+dimH(X(4885),X(6555),y(1860)-120,'ТВ 75″');
+  s+=dimV(0,H,-150,'2700');
+  s+=T(X(4200),y(1050),'Д2','tiny',`style="fill:${v==='green'?'#9fb3a5':'#888'}"`)+T(X(7200),y(1050),'Д1','tiny',`style="fill:${v==='green'?'#9fb3a5':'#888'}"`);
+  s+=T(W/2,H+260,'теневой плинтус · консоль подвесная h 250–600 · низ ТВ 900','tiny');
+  return elevFrame(W,H,s,'Развёртка ТВ-стены зала');
+}
+function eKit(v){
+  const W=2346+5223,H=2700,y=h=>H-h, ub=x=>2346-x, ul=yy=>2346+(8973-yy);
+  const low=v==='green'?'#2F4235':'url(#oak)', tap=v==='green'?'#151515':'url(#brass)';
+  let s=R(0,0,W,H,'fill="#F2F0EB" class="hair"');
+  [[7944,6877],[5388,4288]].forEach(([a,b])=>s+=R(ul(a),y(2400),a-b,1400,'class="glass"')+`<line x1="${ul(a)+(a-b)/2}" y1="${y(2400)}" x2="${ul(a)+(a-b)/2}" y2="${y(1000)}" class="hair"/>`);
+  s+=R(ub(1800),y(1500),1800,600,'fill="url(#mw)" class="hair"');
+  s+=R(2346,y(1500),ul(7944)-2346,600,'fill="url(#mw)" class="hair"');
+  const run=(a,b)=>R(a,y(870),b-a,770,`fill="${low}" class="hair"`)+R(a,y(100),b-a,100,'fill="#111"')+R(a,y(900),b-a,30,'fill="url(#mw)" stroke="#999" stroke-width="6"');
+  s+=run(ub(1800),2346)+run(2346,ul(6877));
+  for(let x=ub(1800)+600;x<2346;x+=600) s+=`<line x1="${x}" y1="${y(870)}" x2="${x}" y2="${y(100)}" stroke="#00000033" stroke-width="8"/>`;
+  for(let x=2346+600;x<ul(6877);x+=600) s+=`<line x1="${x}" y1="${y(870)}" x2="${x}" y2="${y(100)}" stroke="#00000033" stroke-width="8"/>`;
+  s+=R(ub(1500),y(800),600,580,'fill="#151515"')+R(ub(1500),y(915),600,15,'fill="#111"');
+  s+=R(0,0,2346,y(1500),'fill="#F7F6F3" class="hair"');
+  for(let x=586;x<2346;x+=586) s+=`<line x1="${x}" y1="0" x2="${x}" y2="${y(1500)}" class="hair"/>`;
+  const sx=ul(7410); s+=R(sx-250,y(900),500,30,'fill="#2a2a2a"')+R(sx-14,y(1240),28,340,`fill="${tap}"`)+R(sx-14,y(1240),160,28,`fill="${tap}"`);
+  s+=`<line x1="2346" y1="0" x2="2346" y2="${H}" stroke="var(--d-ink)" stroke-width="10" stroke-dasharray="40 30"/>`;
+  s+=T(1173,-90,'верхние шкафы на всю стену','tiny')+T(ul(7410),-90,'мойка у окна','tiny')+T(ul(6877)+150,y(450),'дальше без гарнитура','tiny','style="fill:#777;text-anchor:start"');
+  s+=T(1173,H+260,'стена слева от входа','tiny')+T(2346+2611,H+260,'левая стена (окна)','tiny');
+  s+=dimV(0,H,-150,'2700')+dimV(y(900),H,W+150,'900')+dimV(y(1500),H,W+380,'1500');
+  return elevFrame(W,H,s,'Развёртка кухни');
+}
+function bPlan(v){
+  const vb='6400 9000 3400 3300';
+  let s=base({noStairs:true})+drawItems(furnItems(V[v]).slice(-9));
+  s+=R(6912,10577,1700,0,'');
+  s+=dimH(6912,8712,12050,'1800')+dimV(9327,11327,9450,'2000');
+  s+=T(7762,10980,'ванна 1700×750','tiny')+T(8260,10520,'шторка 900','tiny');
+  s+=`<line x1="7712" y1="9327" x2="7712" y2="9527" stroke="var(--light)" stroke-width="40"/>`;
+  s+=T(7312,9960,'тумба 700','tiny')+T(6560,10180,'Д4','tiny','text-anchor="start"');
+  return svg(s,vb,'План ванной').replace('<svg ','<svg class="sm" ');
+}
+function bA(v){
+  const W=1800,H=2700,y=h=>H-h, tap=v==='green'?'#151515':'url(#brass)';
+  let s=R(0,0,800,H,'fill="url(#mw)" class="hair"')+R(800,0,1000,H,'fill="url(#rel)" class="hair"');
+  s+=R(797,0,8,H,'fill="var(--light)"');
+  s+=`<circle cx="400" cy="${y(1550)}" r="320" fill="none" stroke="#FFE3A3" stroke-width="40" opacity=".8"/><circle cx="400" cy="${y(1550)}" r="300" fill="#C9CED2" stroke="#111" stroke-width="14"/>`;
+  s+=R(50,y(850),700,450,'fill="url(#oak)" class="hair"')+`<line x1="50" y1="${y(625)}" x2="750" y2="${y(625)}" stroke="#7a5530" stroke-width="10"/>`;
+  s+=R(40,y(875),720,25,'fill="#FFFFFF" class="hair"');
+  s+=R(390,y(1080),22,205,`fill="${tap}"`)+R(390,y(1080),110,20,`fill="${tap}"`);
+  s+=`<path d="M1120 ${y(400)} H1480 V${y(330)} Q1480 ${y(300)} 1300 ${y(290)} Q1120 ${y(300)} 1120 ${y(330)} Z" fill="#141414"/>`+R(1120,y(430),360,40,'fill="#141414"');
+  s+=R(1175,y(1150),250,160,`fill="${v==='green'?'#121212':'url(#brass)'}"`);
+  s+=R(0,-50,W,50,'fill="var(--d-soft)"');
+  [400,1300].forEach(x=>s+=R(x-45,0,90,130,'fill="#121212"'));
+  s+=dimH(0,800,-130,'800')+dimH(800,1800,-130,'1000')+dimV(0,H,-150,'2700');
+  s+=T(400,H+230,'мрамор','tiny')+T(1300,H+230,'короб 200 · рельеф','tiny');
+  return elevFrame(W,H,s,'Стена А ванной').replace('<svg ','<svg class="sm" ');
+}
+function bB(v){
+  const W=1800,H=2700,y=h=>H-h, m=v==='green'?'#151515':'url(#brass)';
+  let s=R(0,0,W,H,'fill="url(#mw)" class="hair"');
+  s+=R(100,y(580),1700,560,'fill="url(#mw)" stroke="#999" stroke-width="8"')+R(100,y(30),1700,30,'fill="#111"');
+  s+=R(0,y(580),100,580,'fill="url(#mw)" stroke="#999" stroke-width="8"');
+  s+=R(0,y(2000),900,1420,'fill="#D9E6EC" fill-opacity=".35" stroke="#111" stroke-width="24"');
+  s+=R(452,y(2150),20,1050,`fill="${m}"`)+R(352,y(2170),280,25,`fill="${m}"`)+R(380,y(1180),180,70,`fill="${m}"`)+R(445,y(1550),34,180,`fill="${m}"`);
+  s+=R(0,-50,W,50,'fill="var(--d-soft)"');
+  [500,1250].forEach(x=>s+=R(x-45,0,90,130,'fill="#121212"'));
+  s+=dimH(0,900,-130,'шторка 900')+dimH(100,1800,-300,'ванна 1700')+dimV(y(580),H,W+150,'580')+dimV(y(2150),H,W+380,'2150');
+  s+=T(900,H+230,'экран ванны в мраморе, теневой зазор у пола','tiny');
+  return elevFrame(W,H,s,'Стена Б ванной').replace('<svg ','<svg class="sm" ');
+}
+
+/* swatches */
+const sw=(fill,name,code)=>`<figure><svg viewBox="0 0 1200 900" aria-hidden="true"><rect width="1200" height="900" fill="${fill}"/></svg><figcaption>${name}<small>${code}</small></figcaption></figure>`;
+function baseSwatches(){
+  return sw('url(#mw)','Белый мрамор, пол','кварцвинил клеевой')+sw('#F2F0EB','Тёплый белый, стены','NCS S 0502-Y')+sw('#D8D5CE','Светло-серый','NCS S 1502-Y')+sw('url(#mb)','Чёрный мрамор, лестница','кварцвинил клеевой')+sw('url(#rel)','Рельеф графит','плитка, ванная')+sw('#171717','Чёрный матовый','металл, тени, профили');
+}
+function accSwatches(v){
+  if(v==='green') return sw('#2F4235','Глубокий зелёный','NCS S 7020-G10Y')+sw('#3D5546','Бархат, зелёный','стулья, подушки')+sw('#151515','Металл чёрный','смесители, ручки, светильники')+sw('#C9C5BD','Букле светло-серое','диван, изголовье')+sw('url(#oak)','Дуб, только ванная','тумба как в референсе')+sw('url(#mw)','Керамика «мрамор»','столешница кухни');
+  return sw('url(#oak)','Дуб натуральный','шпон, матовый лак')+sw('url(#brass)','Латунь брашированная','смесители, ручки, подвес')+sw('#CFC9BE','Лён тёплый серый','шторы, текстиль')+sw('#1E1E1E','Чёрный','стулья, консоль')+sw('#F2F0EB','Белые фасады','верх кухни, шкафы')+sw('url(#mw)','Керамика «мрамор»','столешница кухни');
+}
+
+/* rooms */
+const ROOMTXT=[
+  {id:'zal',floor:'Кварцвинил «белый мрамор», проём в коридор без порога.',walls:{green:'ТВ-стена вместе с дверями Д1, Д2 окрашена в глубокий зелёный. Остальные стены тёплые белые.',wood:'Между дверями спален панель из шпона дуба 2100 мм на всю высоту. Двери и стены тёплые белые.'},
+    ceil:'12 встраиваемых LED-спотов сеткой в две группы (периметр и центр), ниша для штор вдоль окон, электрокарниз.',furn:'ТВ 75″ на подвесной консоли, диван 2600, журнальный стол, кресло у окна, комод 2200.',
+    acc:{green:'Диван светло-серое букле, подушки в зелёном бархате, консоль и стол чёрные, шторы светло-серый лён.',wood:'Консоль и журнальный стол чёрные, комод из дуба, торшер и ручки латунные, шторы тёплый лён.'}},
+  {id:'kitchen',floor:'Кварцвинил «белый мрамор», одна плоскость со столовой.',walls:{green:'Стены тёплые белые, фартук из керамики «белый мрамор» от столешницы до верхних шкафов.',wood:'Стены тёплые белые, фартук из керамики «белый мрамор».'},
+    ceil:'6 встраиваемых спотов над рабочими зонами и проходом, LED-подсветка под верхними шкафами, рулонные шторы на окнах.',furn:'Г-образная: варочная панель с духовкой под ней на стене слева от входа, мойка под окном, на ней гарнитур заканчивается. Верхние шкафы на всю стену слева от входа. Холодильник у стены столовой, справа от прохода.',
+    acc:{green:'Нижние фасады и фасад встроенного холодильника глубокий зелёный суперматовый, верхние белые без ручек, мойка и смеситель чёрные.',wood:'Нижние фасады и фасад холодильника из шпона дуба, верхние белые без ручек, смеситель латунь брашированная.'}},
+  {id:'dining',floor:'Кварцвинил «белый мрамор».',walls:{green:'Тёплый белый, одна крупная графика на правой стене.',wood:'Тёплый белый, одна крупная графика на правой стене.'},
+    ceil:'4 встраиваемых спота вокруг стола, подвес над столом, ниша для штор вдоль двух окон.',furn:'Круглый стол Ø1100, 4 стула, витрина-бар 550 у окна.',
+    acc:{green:'Столешница из керамики «мрамор» на чёрной опоре, стулья зелёный бархат, подвес чёрный.',wood:'Стол из дуба, стулья чёрные, подвес из латуни (диск или шар).'}},
+  {id:'bed1',floor:'Кварцвинил «белый мрамор».',walls:{green:'Стена за изголовьем глубокий зелёный, остальные тёплые белые.',wood:'За кроватью панель из шпона дуба 2400 мм на всю высоту, остальные стены тёплые белые.'},
+    ceil:'6 спотов в обход кровати (над изголовьем света нет), 2 подвеса у тумб, ниша для штор по двум стенам, электрокарниз, блэкаут и тюль.',furn:'Кровать 1800×2000, 2 тумбы, 2 шкафа до потолка по сторонам двери, ТВ между окнами.',
+    acc:{green:'Мягкое изголовье светло-серое, бельё белое и серое, тумбы чёрные.',wood:'Бра и подвесы из латуни, тумбы чёрные, бельё из тёплого льна.'}},
+  {id:'bed2',floor:'Кварцвинил «белый мрамор».',walls:{green:'Стена изголовья светло-серая, остальные тёплые белые.',wood:'Стена изголовья светло-серая, остальные тёплые белые.'},
+    ceil:'6 спотов в ногах кровати и вдоль шкафа, подвесы у тумб, ниша для штор у окна.',furn:'Кровать 1600×2000 изголовьем к левой стене, 2 тумбы, шкаф 2140 до потолка у правой стены.',
+    acc:{green:'Зелёный в текстиле: плед, подушки.',wood:'Кровать из дуба, латунная настольная лампа.'}},
+  {id:'cor',floor:'Кварцвинил «белый мрамор», лестница в «чёрном мраморе».',walls:{green:'Тёплый белый. Входная дверь изнутри с белой матовой панелью.',wood:'Тёплый белый. Входная дверь изнутри с белой матовой панелью.'},
+    ceil:'Шесть хаотичных световых линий под разными углами, LED в носиках ступеней, LED-лента в нише шкафа.',furn:'Шкаф 1400 до потолка, открытая ниша 800 с банкеткой, зеркалом и крючками, хозшкаф 1100 за лестницей.',
+    acc:{green:'Ниша внутри зелёная, банкетка из тёмной кожи, крючки чёрные.',wood:'Ниша внутри из дуба, крючки латунные.'}},
+  {id:'bath',floor:'Кварцвинил по гидроизоляции (или керамогранит 60×120 «мрамор»).',walls:{green:'Мрамор за раковиной и у ванны, рельеф графит на коробе и боковых стенах.',wood:'Мрамор за раковиной и у ванны, рельеф графит на коробе и боковых стенах.'},
+    ceil:'Натяжной матовый потолок, 4 чёрных спота, вертикальная LED-линия, подсветка зеркала.',furn:'Ванна 1700×750, тумба 700, подвесной унитаз, шторка 900, полотенцесушитель.',
+    acc:{green:'Сантехника и металл чёрные матовые (как в референсе).',wood:'Сантехника и металл из брашированной латуни.'}}
+];
+function roomCards(v){
+  const rm=Object.fromEntries(ROOMS.map(r=>[r.id,r]));
+  return ROOMTXT.map(t=>{const r=rm[t.id];return `<div class="room"><header><h3>${r.n}</h3><span class="mono" style="color:var(--muted)">${fmt(area(r))} м² · ${r.w}×${r.h}</span></header><dl>
+  <dt>Пол</dt><dd>${t.floor}</dd><dt>Стены</dt><dd>${t.walls[v]}</dd><dt>Потолок, свет</dt><dd>${t.ceil}</dd><dt>Мебель</dt><dd>${t.furn}</dd><dt>Акцент</dt><dd class="accent">${t.acc[v]}</dd></dl></div>`}).join('');
+}
+
+/* doors */
+function doorsTable(v){
+  const pnt=v==='green'?'Со стороны зала глубокий зелёный, со стороны спальни белый':'С обеих сторон тёплый белый';
+  const h=v==='green'?'чёрные матовые':'латунь брашированная';
+  const rows=[
+    ['Д1','Спальня 1 из зала','≈800 × 2000','по замеру, h ≈1950','Внутрь спальни',pnt],
+    ['Д2','Спальня 2 из зала','≈800 × 2000','по замеру, h ≈1950','Внутрь спальни',pnt],
+    ['Д4','Ванная из коридора','≈700 × 2000','по замеру, h ≈1950','Наружу в коридор','Со стороны коридора белый, внутри откосы в плитке'],
+    ['П3','Кухня из зала','890 × 2000, стена 410','без полотна','—','Портал без наличников, откосы штукатурные'],
+    ['П1','Обеденная ↔ кухня','≈960','без полотна','—','Портал с острыми гранями, без наличников'],
+    ['П2','Зал ↔ коридор','1148 × стена 537','без полотна','—','Портал, по желанию скрытая дверь 1000'],
+    ['Д0','Входная','920','металлическая','Наружу','Внутренняя панель МДФ белая матовая, откосы штукатурные']
+  ];
+  return '<tr><th>Марка</th><th>Где</th><th>Проём, мм</th><th>Полотно, мм</th><th>Открывание</th><th>Отделка</th></tr>'+rows.map(r=>`<tr><td class="num"><b>${r[0]}</b></td><td>${r[1]}</td><td class="num">${r[2]}</td><td class="num">${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`).join('')+
+  `<tr><td></td><td colspan="5" style="color:var(--muted)">Скрытых дверей три. Алюминиевая коробка под штукатурку, скрытые петли, магнитный замок. Ручки-розетки минимальные, ${h}. Пример: Profil Doors серии Invisible или аналог.</td></tr>`;
+}
+
+/* spec */
+function spec(v){
+  const fl=ROOMS.reduce((a,r)=>a+area(r),0)-STAIR.w*STAIR.h/1e6;
+  const per=['dining','kitchen','bed2','bed1','zal','cor'].reduce((a,id)=>{const r=ROOMS.find(x=>x.id===id);return a+2*(r.w+r.h)/1000},0);
+  const ln=LINES.reduce((a,l)=>a+lenOf(l.pts),0)/1000;
+  const g=v==='green';
+  const rows=[
+    ['Полы'],
+    ['Кварцвинил клеевой «белый мрамор», 43 класс, защитный слой 0,55','весь этаж, ванная',`${Math.ceil(fl*1.1)}`,'м²','декор по вашему образцу; Alpine Floor, Aquafloor, Vinilam'],
+    ['Кварцвинил клеевой «чёрный мрамор»','проступи и подступенки','≈10','м²','та же коллекция, тёмный декор'],
+    ['Носик ступени алюминиевый, чёрный, с каналом LED','лестница','≈16','шт','по числу ступеней'],
+    ['Самонивелирующаяся смесь 5–8 мм','весь этаж',`${Math.ceil(fl)}`,'м²','Ceresit, Knauf, Vetonit'],
+    ['Клей для ПВХ-покрытий','весь этаж',`${Math.ceil(fl*0.35)}`,'кг','Homakoll, Bostik, Forbo'],
+    ['Плинтус теневой скрытого монтажа, анод. чёрный','по периметру',`${Math.ceil(per*0.92*1.05)}`,'м.п.','Pro Design, Laconistiq, аналог'],
+    ['Стены'],
+    ['Штукатурка гипсовая машинная','все стены, кроме ванной','≈225','м²','Knauf MP-75, Волма'],
+    ['Шпаклёвка + стеклохолст, Q4','все стены','≈225','м²','Sheetrock, Danogips'],
+    ['Краска глубокоматовая моющаяся «тёплый белый»','стены, двери',g?'≈190':'≈205','м² ×2 сл.','Tikkurila, Dulux, Caparol'],
+    g?['Краска «глубокий зелёный»','ТВ-стена зала, изголовье Спальни 1','≈30','м² ×2 сл.','колеровка по NCS S 7020-G10Y, выкраска']:['Панели из шпона дуба, матовый лак','зал между дверями, изголовье Спальни 1','≈12,5','м²','изготовление на мебельном производстве'],
+    ['Краска «светло-серый»','изголовье Спальни 2','≈7,5','м² ×2 сл.','NCS S 1502-Y'],
+    ['Керамика «белый мрамор» 12 мм','кухонный фартук','≈3','м²','рисунок как у пола'],
+    ['Ванная'],
+    ['Керамогранит «белый мрамор» 60×120 (или 120×278)','стена за раковиной, у ванны, экран','≈9','м²','Kerama Marazzi, Italon, Vitra'],
+    ['Плитка рельефная графит','короб, боковые стены','≈13','м²','Kerama Marazzi, Laparet (рельеф «камень»)'],
+    ['Гидроизоляция обмазочная + лента','пол, стены у ванны','≈8','м²','Ceresit CL 51, Knauf Флэхендихт'],
+    ['Ванна стальная 1700×750','','1','шт','Kaldewei Saniform Plus, Bette'],
+    ['Инсталляция + унитаз подвесной безободковый, чёрный матовый','','1','компл.','Grohe Rapid SL / Geberit Duofix + чёрный унитаз'],
+    ['Клавиша смыва',g?'чёрная матовая':'латунь','1','шт','Geberit Sigma, Grohe Skate'],
+    ['Тумба подвесная 700, дуб, с раковиной','','1','шт','как в референсе'],
+    ['Смеситель для раковины, душевая система с термостатом',g?'чёрный матовый':'латунь брашированная','1+1','шт',g?'Hansgrohe (Matt Black), Grohe (Phantom Black)':'Grohe (Brushed Warm Sunset), Hansgrohe (Brushed Bronze)'],
+    ['Шторка на ванну 900, стекло 8 мм, профиль','чёрный','1','шт',''],
+    ['Полотенцесушитель 420×800',g?'чёрный':'латунь','1','шт','Сунержа, Terminus'],
+    ['Зеркало круглое Ø600 с контурной подсветкой','','1','шт',''],
+    ['Потолки и свет'],
+    ['Натяжной потолок, матовый белый','все помещения',`${Math.ceil(fl)}`,'м²','MSD Premium, Pongs, Teqtum'],
+    ['Профиль световой линии 35 мм + LED 24 В 3000 K CRI≥90','коридор, хаотичные линии',`${Math.ceil(ln+2.7)}`,'м.п.','Flexy Line, Arlight'],
+    ['Теневой профиль примыкания','периметр',`${Math.ceil(per+7.6)}`,'м.п.','EuroKraab, Flexy'],
+    ['Ниша для штор + скрытый карниз','обеденная, спальни, зал','≈21','м.п.','электрокарнизы: зал, Спальня 1'],
+    ['Подвесные светильники',g?'чёрные':'латунь','5','шт','обеденная 1, спальни 4'],
+    ['Встраиваемые LED-споты, чёрные, 3000 K, CRI≥90, антиблик (в ванной IP44/65)','все помещения, кроме коридора',`${SPOT.length}`,'шт','Arlight, Denkirs, Maytoni'],
+    ['Двери и электрика'],
+    ['Скрытые двери под покраску','Д1, Д2, Д4','3','шт','Profil Doors Invisible, аналог'],
+    ['Ручки-розетки минимальные',g?'чёрные матовые':'латунь','3','компл.','Morelli, Colombo, AGB'],
+    ['Розетки и выключатели, одна серия','белые / чёрные на тёмных стенах',`${PWR.length+SW.length}`,'точек','Werkel, Schneider Unica, Legrand Valena Life']
+  ];
+  return '<tr><th>Позиция</th><th>Где</th><th style="text-align:right">Кол-во</th><th>Ед.</th><th>Ориентир (средний+)</th></tr>'+rows.map(r=>r.length===1?`<tr class="grp"><td colspan="5">${r[0]}</td></tr>`:`<tr><td>${r[0]}</td><td>${r[1]}</td><td class="num" style="text-align:right">${r[2]}</td><td class="num">${r[3]}</td><td style="color:var(--muted)">${r[4]}</td></tr>`).join('');
+}
+
+function render(){
+  const v=V[cur];
+  document.body.dataset.v=cur;
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===cur?'true':'false'));
+  $('accName').textContent=v.acc;
+  ['vMeta','rMeta'].forEach(id=>$(id).textContent=v.short);
+  $('wMeta').textContent='М 1:100 · '+v.short; $('eMeta').textContent='М 1:50 · '+v.short; $('sMeta').textContent='Средний+ · '+v.short;
+  $('vTag').textContent=v.tag; $('vText').innerHTML=v.text; $('swAcc').innerHTML=accSwatches(cur);
+  $('pFurn').innerHTML=furniture(v);
+  $('pWalls').innerHTML=walls(cur);
+  const used=[...new Set(finList(cur).map(x=>x[4]))];
+  $('wLegend').innerHTML=used.map(k=>`<div><svg viewBox="0 0 1200 800"><rect width="1200" height="800" fill="${FIN[k].f}"/></svg><span>${FIN[k].n}<br><span class="mono" style="color:var(--muted);font-size:11.5px">${FIN[k].c}</span></span></div>`).join('');
+  $('eZal').innerHTML=eZal(cur);
+  $('eZalTxt').textContent=cur==='green'?'Обе скрытые двери окрашены в зелёный вместе со стеной, видны только тонкие швы. Стена читается одной плоскостью, на ней ТВ и подвесная чёрная консоль.':'Панель из дуба стоит между дверями на всю высоту, двери и остальная стена белые. ТВ на фоне дерева, консоль чёрная.';
+  $('eKit').innerHTML=eKit(cur);
+  $('bathVar').textContent=v.bath;
+  $('bPlan').innerHTML=bPlan(cur); $('bA').innerHTML=bA(cur); $('bB').innerHTML=bB(cur);
+  $('tDoors').innerHTML=doorsTable(cur);
+  $('roomCards').innerHTML=roomCards(cur);
+  $('tSpec').innerHTML=spec(cur);
+}
+function once(){
+  $('fArea').textContent=fmt(ROOMS.reduce((a,r)=>a+area(r),0))+' м²';
+  $('swBase').innerHTML=baseSwatches();
+  $('pMeasure').innerHTML=measure();
+  $('pFloor').innerHTML=floors();
+  $('pCeil').innerHTML=ceiling();
+  $('tLines').innerHTML=linesTable();
+  $('pPower').innerHTML=power();
+  $('tPower').innerHTML=powerTable();
+}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{cur=b.dataset.v;try{localStorage.setItem('bm-variant',cur)}catch(e){} render();}));
+once(); render();
+})();
+</script>
