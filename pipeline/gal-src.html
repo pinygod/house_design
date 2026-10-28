@@ -51,7 +51,11 @@ figcaption span{font:12px var(--f-mono);color:var(--muted);text-align:right}
     <div>
       <div class="eyebrow">Проект «Белый мрамор» · фотореалистичные визуализации</div>
       <h1>Рендеры помещений</h1>
-      <p class="lead">Акцент: глубокий зелёный. Кадры просчитаны по 3D-модели проекта с физическим светом: дневной свет из окон и вечерний сценарий со спотами, подвесами и световыми линиями. Нажмите на кадр, чтобы открыть его на весь экран.</p>
+      <p class="lead">Кадры просчитаны по 3D-модели проекта с физическим светом: дневной свет из окон и вечерний сценарий со спотами, подвесами и световыми линиями. Нажмите на кадр, чтобы открыть его на весь экран.</p>
+    </div>
+    <div class="seg" role="group" aria-label="Вариант акцента">
+      <button id="vg" type="button" data-v="green" aria-pressed="true">А · Зелёный</button>
+      <button id="vw" type="button" data-v="wood" aria-pressed="false">Б · Дерево + латунь</button>
     </div>
   </header>
   <section class="feed" id="feed"></section>
@@ -75,7 +79,7 @@ const SHOTS={
         ['kitchen','day','Кухня','нижние фасады из дуба, латунный смеситель',1],['dining','day','Обеденная','стол из чёрного мрамора, чёрные стулья',0],['bed1','day','Спальня 1','панель из дуба за кроватью, латунные подвесы',0],
         ['bed2','day','Спальня 2','изголовье из дуба',0],['cor','day','Коридор','ниша шкафа из дуба, лестница в «чёрном мраморе»',0],['bath','eve','Ванная','латунные смесители и полотенцесушитель',1]]
 };
-let v='green';
+let v='green'; try{const s=localStorage.getItem('bm-gal'); if(s==='green'||s==='wood') v=s;}catch(e){}
 let list=[], cur=0;
 const $=id=>document.getElementById(id);
 function render(){

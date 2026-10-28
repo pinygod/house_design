@@ -188,6 +188,10 @@ details.src img{max-width:520px;width:100%;margin-top:12px;border:1px solid var(
 <header class="top">
   <div class="wrap">
     <div class="brand">Проект «Белый мрамор»</div>
+    <div class="seg" role="group" aria-label="Вариант акцента">
+      <button id="v-green" type="button" data-v="green" aria-pressed="true"><span class="dot" style="background:#2F4235"></span>А · Зелёный</button>
+      <button id="v-wood" type="button" data-v="wood" aria-pressed="false"><span class="dot" style="background:linear-gradient(135deg,#B98957,#CFAE72)"></span>Б · Дерево + латунь</button>
+    </div>
     <nav class="toc" aria-label="Листы альбома">
       <a href="#concept">01 Концепция</a><a href="#measure">02 Обмерный план</a><a href="#furniture">03 Мебель</a><a href="#floors">04 Полы</a><a href="#walls">05 Стены</a><a href="#ceiling">06 Потолки и свет</a><a href="#power">07 Электрика</a><a href="#elevations">08 Развёртки</a><a href="#bath">09 Ванная</a><a href="#doors">10 Двери</a><a href="#rooms">11 Помещения</a><a href="#spec">12 Ведомость</a><a href="#open">13 Уточнить</a><a href="https://claude.ai/artifact/28H1v2KMhfgMxbCvUBXe2U" target="_blank" rel="noopener" style="color:var(--ink)">14 3D-визуализация ↗</a><a href="https://claude.ai/artifact/NdNLScfeLo88R2JBLUzSV9" target="_blank" rel="noopener" style="color:var(--ink)">15 Рендеры ↗</a>
     </nav>
@@ -462,17 +466,17 @@ const SWING=[
 const STAIR={x:2448,y:10327,w:3140,h:1000,n:12};
 
 const V={
-  green:{tag:'Акцент · глубокий зелёный',short:'Акцент: глубокий зелёный',acc:'глубокий зелёный',
+  green:{tag:'Вариант А · глубокий зелёный',short:'Вариант А',acc:'глубокий зелёный',
     kit:'#2F4235',chair:'#2F4235',table:'url(#mw)',cred:'#1E1E1E',metal:'#151515',zalWall:'#2F4235',head:'#2F4235',niche:'#2F4235',
     text:'<p>Глубокий зелёный, почти чёрный при вечернем свете, рядом с белым мрамором выглядит дорого и спокойно. Он стоит на трёх больших плоскостях: ТВ-стена в зале вместе со скрытыми дверями, стена за изголовьем в Спальне 1 и нижние фасады кухни.</p><p>Металл везде чёрный матовый. Мягкий акцент дают бархат на стульях и подушках. Дерево только в тумбе ванной, как в референсе.</p>',
-    bath:'Смесители, душевая стойка, полотенцесушитель и клавиша чёрные матовые, как в референсе. Зелёный только в текстиле: полотенца и коврик.'},
+    bath:'Вариант А: смесители, душевая стойка, полотенцесушитель и клавиша чёрные матовые, как в референсе. Зелёный только в текстиле: полотенца и коврик.'},
   wood:{tag:'Вариант Б · дерево + латунь',short:'Вариант Б',acc:'тёплое дерево с латунью',
     kit:'url(#oak)',chair:'#1E1E1E',table:'url(#oak)',cred:'url(#oak)',metal:'url(#brass)',zalWall:'#F2F0EB',head:'url(#oak)',niche:'url(#oak)',
     text:'<p>Натуральный дуб в шпоне тёплого медового оттенка, как тумба в референсе ванной, плюс матовая брашированная латунь. Дерево стоит панелями на всю высоту: в зале между дверями спален и за изголовьем в Спальне 1. Нижние фасады кухни тоже из дуба.</p><p>Латунь только в точках контакта: смесители, ручки, подвесы у кроватей. Стены и двери белые, чёрный остаётся в лестнице, ТВ-консоли и стульях.</p>',
     bath:'Вариант Б: смесители, душевая стойка, полотенцесушитель и клавиша из брашированной латуни. Тумба из дуба, отделка стен как в варианте А.'}
 };
 let cur='green';
-
+try{const s=localStorage.getItem('bm-variant'); if(s==='green'||s==='wood') cur=s;}catch(e){}
 
 const $=id=>document.getElementById(id);
 const R=(x,y,w,h,a='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" ${a}/>`;

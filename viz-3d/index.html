@@ -50,6 +50,7 @@ button:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
     <div><div class="eyebrow">Проект «Белый мрамор» · 3D-визуализация</div><h1>Помещения в объёме</h1></div>
     <div class="ctrls">
       
+      <div class="seg" role="group" aria-label="Вариант акцента"><button id="vg" type="button" data-v="green" aria-pressed="true">А · Зелёный</button><button id="vw" type="button" data-v="wood" aria-pressed="false">Б · Дерево + латунь</button></div>
       <div class="seg" role="group" aria-label="Время суток"><button id="md" type="button" data-m="day" aria-pressed="true">День</button><button id="me" type="button" data-m="eve" aria-pressed="false">Вечер</button></div>
     </div>
   </header>
@@ -115,7 +116,7 @@ const INFO={
 };
 
 let state={room:'zal',v:'green',mode:'day'};
-try{const s=JSON.parse(localStorage.getItem('bm3d')||'{}'); if(s.mode==='day'||s.mode==='eve')state.mode=s.mode;}catch(e){}
+try{const s=JSON.parse(localStorage.getItem('bm3d')||'{}'); if(s.v==='green'||s.v==='wood')state.v=s.v; if(s.mode==='day'||s.mode==='eve')state.mode=s.mode;}catch(e){}
 const h=(location.hash||'').slice(1); if(VIEWS[h]) state.room=h;
 
 const $=id=>document.getElementById(id);
@@ -412,7 +413,7 @@ function init(){
     document.querySelectorAll('[data-v]').forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed',b.dataset.v===state.v?'true':'false')});
     document.querySelectorAll('[data-m]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===state.mode?'true':'false'));
     const r=ROOMS.find(q=>q.id===state.room);
-    $('iEy').textContent='Акцент · глубокий зелёный'+' · '+(state.mode==='day'?'день':'вечер');
+    $('iEy').textContent=(state.v==='green'?'Вариант А · зелёный':'Вариант Б · дерево + латунь')+' · '+(state.mode==='day'?'день':'вечер');
     $('iName').textContent=r?r.n:'Весь этаж';
     $('iMeta').textContent=r?`${(r.w*r.h/1e6).toFixed(1).replace('.',',')} м² · ${r.w} × ${r.h} мм · потолок 2,7 м`:'≈89 м² · 7 помещений';
     $('iList').innerHTML=INFO[state.room][state.v].map(t=>`<li>${t}</li>`).join('');
