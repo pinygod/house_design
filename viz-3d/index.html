@@ -59,7 +59,7 @@ button:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
     <div><div class="eyebrow" id="iEy">Помещение</div><h2 id="iName">—</h2><div class="meta" id="iMeta"></div></div>
     <div><ul id="iList"></ul></div>
   </section>
-  <p class="note">Схематичная визуализация в реальных размерах по планам проекта: материалы, цвета, расстановка и сценарии света. Это не фотореалистичный рендер, мелкие детали (ручки, текстиль, декор) упрощены.</p>
+  <p class="note">Схематичная визуализация в реальных размерах по планам проекта: материалы, цвета, расстановка и сценарии света. Это не фотореалистичный рендер, текстиль и декор упрощены. <a href="https://claude.ai/artifact/NdNLScfeLo88R2JBLUzSV9" target="_blank" rel="noopener" style="color:var(--ink)">Рендеры ↗</a> · <a href="https://claude.ai/artifact/9MB8Cj6L6JAypYiB44Hc24" target="_blank" rel="noopener" style="color:var(--ink)">Альбом 2-го этажа ↗</a> · <a href="https://claude.ai/artifact/TtxLQreexDNjqHi2Xh63z7" target="_blank" rel="noopener" style="color:var(--ink)">3D 3-го этажа ↗</a></p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -263,7 +263,7 @@ function init(){
     if(g){B(5578,0,T,4644,0,CH,MAT.green); B(2766,4764,5946,T,0,CH,MAT.green);}
     else{B(5578,800,20,2400,0,CH,oak(2.4,2.7)); B(4650,4764,2100,20,0,CH,oak(2.1,2.7));}
     // bath
-    B(6912,9327,1800,T,0,CH,porcB(1.8,2.7)); B(8712-T,9327,T,2000,0,CH,marble(2,2.7)); B(6912,11327-T,1800,T,0,CH,porcW(1.8,2.7)); B(6912,9327,T,2000,0,CH,marble(2,2.7));
+    B(6912,9327,1800,T,0,CH,porcB(1.8,2.7)); B(8712-T,9327,T,2000,0,CH,marble(2,2.7)); B(6912,11327-T,1800,T,0,CH,porcW(1.8,2.7)); B(6912,9327,T,478,0,CH,marble(.48,2.7)); B(6912,10505,T,822,0,CH,marble(.82,2.7)); B(6912,9805,T,700,2000,CH,marble(.7,.7));
     /* doors */
     const zf=g?MAT.green:MAT.wall;
     [3800,6800].forEach(x=>{B(x,4724,800,40,0,2000,[MAT.wall,MAT.wall,MAT.wall,MAT.wall,zf,MAT.wall]); loop([[M(x),0.002,4.7705],[M(x+800),0.002,4.7705],[M(x+800),2,4.7705],[M(x),2,4.7705]],seamMat);});

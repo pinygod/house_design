@@ -51,12 +51,13 @@ figcaption span{font:12px var(--f-mono);color:var(--muted);text-align:right}
     <div>
       <div class="eyebrow">Проект «Белый мрамор» · фотореалистичные визуализации</div>
       <h1>Рендеры помещений</h1>
-      <p class="lead">Акцент: эвкалипт, стены тёплые молочные. Кадры просчитаны по 3D-модели проекта с физическим светом: дневной свет из окон и вечерний сценарий со спотами, подвесами и световыми линиями. Нажмите на кадр, чтобы открыть его на весь экран.</p>
+      <p class="lead" id="lead"><span id="leadAcc">2-й этаж: акцент эвкалипт, пол белый мрамор.</span> Кадры просчитаны по 3D-модели проекта с физическим светом: дневной свет из окон и вечерний сценарий со спотами, подвесами и световыми линиями. Нажмите на кадр, чтобы открыть его на весь экран.</p>
     </div>
+    <div class="seg" role="group" aria-label="Этаж"><button id="f2" type="button" data-f="2" aria-pressed="true">2-й этаж</button><button id="f3" type="button" data-f="3" aria-pressed="false">3-й этаж</button></div>
   </header>
   <section class="feed" id="feed"></section>
   <p class="note">Мебель и декор в кадрах условные: формы и размеры по проекту, без конкретных моделей. Материалы, цвета, отделка стен и пола, свет и пропорции соответствуют альбому.</p>
-  <div class="links"><a href="https://claude.ai/artifact/9MB8Cj6L6JAypYiB44Hc24" target="_blank" rel="noopener">Альбом проекта ↗</a><a href="https://claude.ai/artifact/28H1v2KMhfgMxbCvUBXe2U" target="_blank" rel="noopener">Интерактивная 3D-модель ↗</a></div>
+  <div class="links"><a href="https://claude.ai/artifact/9MB8Cj6L6JAypYiB44Hc24" target="_blank" rel="noopener">Альбом 2-го этажа ↗</a><a href="https://claude.ai/artifact/McGG55hERMoPMfJy1exJJC" target="_blank" rel="noopener">Альбом 3-го этажа ↗</a><a href="https://claude.ai/artifact/28H1v2KMhfgMxbCvUBXe2U" target="_blank" rel="noopener">3D 2-го этажа ↗</a><a href="https://claude.ai/artifact/TtxLQreexDNjqHi2Xh63z7" target="_blank" rel="noopener">3D 3-го этажа ↗</a></div>
 </div>
 <div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Кадр на весь экран">
   <img id="lbImg" alt="">
@@ -67,32 +68,34 @@ figcaption span{font:12px var(--f-mono);color:var(--muted);text-align:right}
 (function(){
 const IMG=__IMAGES__;
 const SHOTS={
-  green:[['zal','day','Зал','ТВ-стена цвета эвкалипт, графитовая консоль с рельефом',1],['zal','eve','Зал','вечер: споты 2700 K и торшер',0],['zal2','day','Зал','мягкий диван в букле, круглые столики, ворсистый ковёр',0],
+  green:[['zal','day','Зал','ТВ-стена цвета эвкалипт, графитовая консоль с рельефом',1],['zal','eve','Зал','вечер: споты 2700 K',0],['zal2','day','Зал','мягкий диван в букле, круглые столики, ворсистый ковёр',0],
          ['kitchen','day','Кухня','фасады цвета эвкалипт, верх молочный, столешница «мрамор»',1],['dining','day','Обеденная','стол из чёрного мрамора, стулья в бархате цвета эвкалипт',0],['bed1','day','Спальня 1','стена за изголовьем цвета эвкалипт, мягкое изголовье',0],
          ['bed1','eve','Спальня 1','вечер: споты в обход кровати и подвесы',0],['bed2','day','Спальня 2','светлая гамма, зелёный в текстиле',0],['cor','day','Коридор','лестница вверх в «чёрном мраморе», под ней марш вниз',1],
          ['cor','eve','Коридор','вечер: хаотичные световые линии и подсветка ступеней',0],['bath','eve','Ванная','чёрный фактурный керамогранит, белый мрамор, дуб',0]],
-  wood:[['zal','day','Зал','панель из шпона дуба между дверями спален',1],['zal','eve','Зал','вечер: тёплый свет по дереву',0],['zal2','day','Зал','диван, комод из дуба, латунный торшер',0],
-        ['kitchen','day','Кухня','нижние фасады из дуба, латунный смеситель',1],['dining','day','Обеденная','стол из чёрного мрамора, чёрные стулья',0],['bed1','day','Спальня 1','панель из дуба за кроватью, латунные подвесы',0],
-        ['bed2','day','Спальня 2','изголовье из дуба',0],['cor','day','Коридор','ниша шкафа из дуба, лестница в «чёрном мраморе»',0],['bath','eve','Ванная','латунные смесители и полотенцесушитель',1]]
+  f3:[['bed','day','Спальня','стена за изголовьем в мягком синем, изголовье в букле',1],['bed','eve','Спальня','вечер: встроенные споты 2700 K',0],['bed2','day','Спальня','ТВ справа от балконной двери на дубовой консоли',0],
+      ['cab1','day','Кабинет 1','стол из светлого дуба, стеллаж, вход из спальни',0],['cab2','day','Кабинет 2','синяя стена за рабочим местом',0],['cor','day','Общая комната','хаотичные световые линии, чёрное ограждение проёма',1],
+['cor','eve','Общая комната','вечер: световые линии',0],['gard','day','Гардероб','колонна с зеркалом в рост, проход у окна',0],['bath','eve','Ванная','короб инсталляции и чёрный керамогранит, мрамор, ванна под окном',1]]
 };
-let v='green';
+const KEY={green:s=>`green_${s[1]}_${s[0]}`, f3:s=>`f3_${s[1]}_${s[0]}`};
+const LEAD={green:'2-й этаж: акцент эвкалипт, пол белый мрамор.',f3:'3-й этаж: акцент мягкий синий, пол Alpine Floor «Ратленд».'};
+let v='green'; try{const s=localStorage.getItem('bm-gal-floor'); if(s==='green'||s==='f3') v=s;}catch(e){}
 let list=[], cur=0;
 const $=id=>document.getElementById(id);
 function render(){
   document.body.dataset.v=v;
   document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));
-  list=SHOTS[v].filter(s=>IMG[`${v}_${s[1]}_${s[0]}`]);
-  $('feed').innerHTML=list.map((s,i)=>`<figure tabindex="0" data-i="${i}" class="${s[4]?'big':''}"><img loading="lazy" src="${IMG[`${v}_${s[1]}_${s[0]}`]}" alt="${s[2]}: ${s[3]}"><figcaption><b>${s[2]}<span class="tag ${s[1]}">${s[1]==='day'?'день':'вечер'}</span></b><span>${s[3]}</span></figcaption></figure>`).join('');
-  try{localStorage.setItem('bm-gal',v)}catch(e){}
+  list=SHOTS[v].filter(s=>IMG[KEY[v](s)]); document.querySelectorAll('button[data-f]').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.f==='3')===(v==='f3')?'true':'false')); document.getElementById('leadAcc').textContent=LEAD[v];
+  $('feed').innerHTML=list.map((s,i)=>`<figure tabindex="0" data-i="${i}" class="${s[4]?'big':''}"><img loading="lazy" src="${IMG[KEY[v](s)]}" alt="${s[2]}: ${s[3]}"><figcaption><b>${s[2]}<span class="tag ${s[1]}">${s[1]==='day'?'день':'вечер'}</span></b><span>${s[3]}</span></figcaption></figure>`).join('');
+  try{localStorage.setItem('bm-gal-floor',v)}catch(e){}
 }
-function open(i){cur=(i+list.length)%list.length; const s=list[cur]; $('lbImg').src=IMG[`${v}_${s[1]}_${s[0]}`]; $('lbImg').alt=s[2]; $('lbCap').textContent=`${s[2]} · ${s[1]==='day'?'день':'вечер'} · ${cur+1}/${list.length}`; $('lb').hidden=false; $('lbClose').focus();}
+function open(i){cur=(i+list.length)%list.length; const s=list[cur]; $('lbImg').src=IMG[KEY[v](s)]; $('lbImg').alt=s[2]; $('lbCap').textContent=`${s[2]} · ${s[1]==='day'?'день':'вечер'} · ${cur+1}/${list.length}`; $('lb').hidden=false; $('lbClose').focus();}
 function close(){$('lb').hidden=true;}
 $('feed').addEventListener('click',e=>{const f=e.target.closest('figure'); if(f) open(+f.dataset.i);});
 $('feed').addEventListener('keydown',e=>{const f=e.target.closest('figure'); if(f&&(e.key==='Enter'||e.key===' ')){e.preventDefault();open(+f.dataset.i);}});
 $('lbPrev').onclick=()=>open(cur-1); $('lbNext').onclick=()=>open(cur+1); $('lbClose').onclick=close;
 $('lb').addEventListener('click',e=>{if(e.target.id==='lb')close();});
 document.addEventListener('keydown',e=>{if($('lb').hidden)return; if(e.key==='Escape')close(); if(e.key==='ArrowLeft')open(cur-1); if(e.key==='ArrowRight')open(cur+1);});
-document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{v=b.dataset.v;render();}));
+document.querySelectorAll('button[data-f]').forEach(b=>b.addEventListener('click',()=>{v=b.dataset.f==='3'?'f3':'green';render();}));
 render();
 })();
 </script>

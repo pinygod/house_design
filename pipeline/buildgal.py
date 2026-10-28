@@ -2,7 +2,7 @@ import glob, base64, io, json, os
 from PIL import Image, ImageEnhance
 imgs={}
 os.makedirs('rend_out',exist_ok=True)
-for f in sorted(glob.glob('rend/*.jpg')):
+for f in sorted(glob.glob('rend/*.jpg'))+sorted(glob.glob('rend3/*.jpg')):
     if 'cor2' in f: continue
     k=os.path.basename(f)[:-4]  # green_day_zal
     im=Image.open(f).convert('RGB')

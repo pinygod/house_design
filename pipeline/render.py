@@ -48,6 +48,7 @@ if args.get('floor') == 3:
       'gard2': ([8500, 1450, 10000], [8950, 1100, 6000]),
       'bath': ([2600, 1450, 9900], [600, 1150, 8500]),
     }
+if 'cams' in args: CAMS.update({k: tuple(v) for k, v in args['cams'].items()})
 def B(x, y, z):  # three mm -> blender m
     return Vector((x / 1000, -z / 1000, y / 1000))
 
