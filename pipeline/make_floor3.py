@@ -204,8 +204,8 @@ cut("  function buildVariant(v){", "  function pendant(", r"""  function buildVa
     B(1050,10050,1700,750,0,550,marble(1.7,.55)); B(1050,10050,1700,750,550,580,MAT.ceramic); B(1150,10150,1500,550,578,584,MAT.water);
     B(1850,10044,900,10,580,2000,MAT.glass,false); B(1850,10042,900,14,1986,2000,hm); B(1850,10042,14,14,580,2000,hm); B(2736,10042,14,14,580,2000,hm);
     Cy(2730,10425,12,1100,2150,hm); B(2510,10413,220,24,2140,2160,hm); Cy(2510,10425,125,2118,2132,hm); B(2717,10355,30,140,1080,1150,hm);
-    Cy(1110,8345,10,600,1400,hm); Cy(1490,8345,10,600,1400,hm); for(let k=0;k<6;k++) B(1110,8335,380,20,620+k*150,632+k*150,hm); B(1150,8360,300,20,820,1380,BV);
-    B(1000,8303,10,10,0,CH,MAT.emis,false); // vertical light line in the corner by the toilet
+    Cy(45,8620,10,600,1400,hm); Cy(45,9020,10,600,1400,hm); for(let k=0;k<6;k++) B(35,8620,20,400,620+k*150,632+k*150,hm); B(60,8660,20,320,820,1380,BV); // towel rail on the black wall to the toilet's right
+    B(150,8500,12,6,0,CH,MAT.emis,false); // vertical light line on the box, right of the toilet
     applyMode();
   }
 """)

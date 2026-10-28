@@ -97,7 +97,7 @@ const VIEWS={
   plan:{}
 };
 const INFO={
-  zal:{green:['ТВ-стена вместе со скрытыми дверями спален окрашена в эвкалипт, стены молочные','Модульный диван в тёплом букле, подушки в бархате цвета эвкалипт, ворсистый ковёр','Графитовая консоль с рельефом, два круглых столика из чёрного мрамора','12 встраиваемых спотов, ниша со шторами вдоль окон'],
+  zal:{green:['ТВ-стена вместе со скрытыми дверями спален окрашена в эвкалипт, стены молочные','Модульный диван в тёплом букле, подушки в бархате цвета эвкалипт, ворсистый ковёр','Графитовая консоль с рельефом, два круглых столика из чёрного мрамора','12 встраиваемых спотов'],
        wood:['Панель из шпона дуба между дверями спален, ТВ на ней','Комод и столешница журнального стола из дуба','Латунный торшер, консоль чёрная','12 встраиваемых спотов, ниша со шторами вдоль окон']},
   kitchen:{green:['Нижние фасады и колонна холодильника цвета эвкалипт, суперматовые','Верхние шкафы молочные матовые на всю стену, подсветка под ними','Столешница и фартук из керамики «белый мрамор»','Мойка у окна, на ней гарнитур заканчивается'],
        wood:['Нижние фасады и колонна холодильника из шпона дуба','Верхние шкафы белые на всю стену, подсветка под ними','Столешница и фартук из керамики «белый мрамор»','Смеситель из брашированной латуни']},
@@ -220,8 +220,9 @@ function init(){
     for(let k=0;k<14;k++){const x=STAIR.x+STAIR.w-(k+1)*DW, top=-(k+1)*207; B(x,STAIR.y,DW,STAIR.h,top-380,top,[bm,MAT.wall,bm,MAT.wall,MAT.wall,MAT.wall]);}
     /* black railing like on floor 3: sloped top rail along the nosings + 12 mm balusters @120, black slab edge */
     const BK=MAT.black, RZ=STAIR.y-60, rail=x=>210*((x-STAIR.x)/SW+1)+900, X1=STAIR.x+STAIR.w;
-    { const XC=STAIR.x+SW*((CH-20-900)/210-1), L=Math.hypot(XC-STAIR.x,CH-20-rail(STAIR.x)), m=new THREE.Mesh(new THREE.BoxGeometry(M(L),.04,.04),BK); m.position.set(M((STAIR.x+XC)/2),M((rail(STAIR.x)+CH-20)/2-20),M(RZ+20)); m.rotation.z=Math.atan2(CH-20-rail(STAIR.x),XC-STAIR.x); m.castShadow=true; G.add(m); }
-    for(let x=STAIR.x+30;x<=X1-30;x+=120) B(x-6,RZ+14,12,12,0,Math.min(rail(x)-30,CH),BK); // past the ceiling line the balusters run floor-to-ceiling
+    B(STAIR.x,RZ,STAIR.w,40,960,1000,BK); for(let x=STAIR.x+30;x<=X1-30;x+=120) B(x-6,RZ+14,12,12,0,960,BK); // edge guard 1000 high, as on floor 3
+    { const XA=STAIR.x+3*SW, FZ=STAIR.y+14, L=Math.hypot(X1-XA,rail(X1)-rail(XA)), m=new THREE.Mesh(new THREE.BoxGeometry(M(L),.04,.04),BK); m.position.set(M((XA+X1)/2),M((rail(XA)+rail(X1))/2+20),M(FZ+6)); m.rotation.z=Math.atan2(rail(X1)-rail(XA),X1-XA); m.castShadow=true; G.add(m);
+      for(let x=XA+30;x<=X1-30;x+=120){const i=Math.floor((x-STAIR.x)/SW); B(x-6,FZ,12,12,(i+1)*210,rail(x),BK);} } // handrail on the flight from the 4th step, inside the stair opening
     B(STAIR.x,STAIR.y-20,STAIR.w,20,-300,0,BK); B(STAIR.x,STAIR.y-20,STAIR.w,20,-3000,-300,MAT.wall); B(STAIR.x-20,STAIR.y,20,STAIR.h,-3000,0,MAT.wall); B(STAIR.x+STAIR.w,STAIR.y,20,STAIR.h,-3000,-250,MAT.wall);
     B(STAIR.x,11327,STAIR.w,20,-3000,0,MAT.wall); B(STAIR.x-500,STAIR.y,STAIR.w+1000,STAIR.h,-3020,-3000,std('#CFCBC4',.8)); }
 
@@ -303,8 +304,6 @@ function init(){
     for(let i=0;i<3;i++){const x=4620+i*733; B(x+5,7800,723,760,380,540,MAT.boucle); B(x+5,8460,723,300,470,930,MAT.boucle);}
     B(4720,8330,420,160,540,930,V.cush); B(6280,8330,420,160,540,930,V.cush); B(5200,7900,500,420,540,560,MAT.velvet);
     Cy(5600,7050,450,350,380,blackM(.9,.9)); Cy(5600,7050,160,0,350,MAT.graph); Cy(6230,7300,280,280,305,blackM(.56,.56)); Cy(6230,7300,110,0,280,MAT.graph);
-    Cy(8050,5875,420,100,430,MAT.boucle); B(8330,5470,180,810,430,800,MAT.boucle);
-    Cy(8380,6500,12,0,1450,V.metal); Cy(8380,6500,180,1450,1680,MAT.shade);
     Cy(7480,8520,190,0,420,MAT.graph); Cy(7480,8520,12,420,1500,MAT.leather);
     for(let i=0;i<14;i++){const a=i*2.4, y=850+(i%5)*170, m=new THREE.Mesh(new THREE.SphereGeometry(1,20,10),MAT.leaf); m.scale.set(.12,.012,.32); m.rotation.order='YXZ'; m.rotation.y=a; m.rotation.x=-.55-(i%3)*.15; m.position.set(M(7480)+Math.sin(a)*.2,M(y),M(8520)+Math.cos(a)*.2); m.castShadow=true; G.add(m);}
     art(g);
@@ -328,13 +327,13 @@ function init(){
     B(0,9327,1400,600,0,2700,MAT.white); B(698,9925,4,4,0,2700,MAT.black);
     B(1400,9327,800,20,0,2700,V.niche); B(1400,9347,800,380,300,450,V.bench); B(1400,9327,800,400,2100,2700,MAT.white); B(1400,9718,800,8,2090,2100,MAT.emis,false); B(1500,9347,600,8,900,1950,MAT.mirror); B(1500,9360,200,300,450,520,MAT.black);
     /* bath */
-    B(6962,9330,700,460,400,850,oak(.7,.45)); B(6952,9330,720,470,850,880,MAT.ceramic); B(7112,9407,400,300,877,883,std('#DCE1E4',.2));
+    B(6962,9330,700,460,400,850,MAT.graph); B(6952,9330,720,470,850,880,MAT.ceramic); B(7112,9407,400,300,877,883,std('#DCE1E4',.2));
     Cy(7312,9400,12,880,1080,V.metal); B(7300,9400,24,110,1050,1070,V.metal);
     const mir=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,.015,48),MAT.mirror); mir.rotation.x=Math.PI/2; mir.position.set(7.312,1.55,9.336); G.add(mir);
     const ring=new THREE.Mesh(new THREE.TorusGeometry(.305,.01,8,64),MAT.emis); ring.position.set(7.312,1.55,9.334); G.add(ring);
     const tb=new THREE.Mesh(new THREE.CylinderGeometry(.18,.15,.28,40),MAT.gloss); tb.scale.set(1,1,1.45); tb.position.set(8.212,.34,9.6); tb.castShadow=true; G.add(tb);
     const ts=new THREE.Mesh(new THREE.CylinderGeometry(.185,.185,.02,40),MAT.gloss); ts.scale.set(1,1,1.45); ts.position.set(8.212,.49,9.6); G.add(ts);
-    B(8062,9330,300,110,260,480,MAT.gloss); B(8700,9330,10,10,0,2700,MAT.emis,false); B(8087,9330,250,8,1000,1150,g?MAT.metalB:MAT.brass);
+    B(8062,9330,300,110,260,480,MAT.gloss); B(8520,9330,12,6,0,2700,MAT.emis,false); B(8087,9330,250,8,1000,1150,g?MAT.metalB:MAT.brass);
     B(6912,10577,1700,750,0,550,marble(1.7,.55)); B(6912,10577,1700,750,550,580,MAT.ceramic); B(7012,10677,1500,550,578,584,MAT.water); B(8612,10577,100,750,0,580,marble(.1,.58));
     B(7812,10571,900,10,580,2000,MAT.glass,false); B(7812,10569,900,14,1986,2000,MAT.metalB); B(7812,10569,14,14,580,2000,MAT.metalB); B(8698,10569,14,14,580,2000,MAT.metalB);
     Cy(8250,11296,12,1100,2150,V.metal); B(8238,11080,24,220,2140,2160,V.metal); Cy(8250,11080,125,2118,2132,V.metal); B(8180,11297,140,30,1080,1150,V.metal);
