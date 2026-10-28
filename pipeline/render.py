@@ -29,10 +29,29 @@ CAMS = {
   'cor2': ([6600, 1450, 9900], [1000, 1100, 10900]),
   'bath': ([7050, 1450, 11200], [8000, 1200, 9400]),
 }
+SPOT_Y = 2675
+LAMPS = [[8380, 1560, 6500]]
+if args.get('floor') == 3:
+    SPOT = [[5200,700],[5200,1900],[5200,3200],[6500,900],[8700,900],[7600,1500],[1000,1000],[3100,1000],[1000,2700],[3100,2700],
+            [1000,5000],[3100,5000],[1000,6900],[3100,6900],[8500,5200],[8500,6500],[8500,7400],[8500,9000],[8500,10100],[2000,8900],[500,9300],[1500,10400],[2400,10400]]
+    PEND = []
+    LAMPS = []
+    SPOT_Y = 2525
+    CAMS = {
+      'bed': ([5300, 1450, 450], [7600, 950, 3800]),
+      'bed2': ([5900, 1450, 3500], [8300, 1150, 300]),
+      'cab1': ([3500, 1450, 3300], [900, 1000, 1600]),
+      'cab2': ([3600, 1450, 4400], [1200, 950, 7300]),
+      'cor': ([6900, 1550, 4800], [4300, 1100, 10000]),
+      'cor2': ([3500, 1550, 9200], [7000, 1200, 5500]),
+      'gard': ([8500, 1450, 4700], [9050, 1000, 9600]),
+      'gard2': ([8500, 1450, 10000], [8950, 1100, 6000]),
+      'bath': ([2600, 1450, 9900], [600, 1150, 8500]),
+    }
 def B(x, y, z):  # three mm -> blender m
     return Vector((x / 1000, -z / 1000, y / 1000))
 
-WARM = (1.0, 0.80, 0.58, 1)
+WARM = (1.0, 0.74, 0.50, 1)
 eve = MODE == 'eve'
 
 def principled(mat):
@@ -90,6 +109,7 @@ for mat in bpy.data.materials:
     elif name == 'gloss': setin(p, 'Base Color', (0.012, 0.012, 0.013, 1)); setin(p, 'Roughness', 0.06); setin(p, 'Coat Weight', 0.6)
     elif name == 'ceramic': setin(p, 'Roughness', 0.06); setin(p, 'Coat Weight', 0.5)
     elif name == 'water': setin(p, 'Roughness', 0.05)
+    elif name == 'rutland': setin(p, 'Roughness', 0.4); setin(p, 'Coat Weight', 0.1)
     elif name == 'marble': setin(p, 'Roughness', 0.22); setin(p, 'Coat Weight', 0.1); setin(p, 'Coat Roughness', 0.2)
     elif name == 'blackmarble': setin(p, 'Roughness', 0.18); setin(p, 'Coat Weight', 0.4)
     elif name in ('wall', 'ceil'): setin(p, 'Roughness', 0.92)
@@ -97,11 +117,31 @@ for mat in bpy.data.materials:
     elif name == 'white': setin(p, 'Roughness', 0.35); setin(p, 'Coat Weight', 0.2)
     elif name == 'oak': setin(p, 'Roughness', 0.55); add_bump(mat, 0.08)
     elif name in ('porcB', 'porcW'): setin(p, 'Roughness', 0.7); add_bump(mat, 0.35)
-    elif name == 'velvet': setin(p, 'Sheen Weight', 0.2); setin(p, 'Roughness', 0.9)
+    elif name in ('velvet', 'blueVel'): setin(p, 'Sheen Weight', 0.2); setin(p, 'Roughness', 0.9)
     elif name in ('fabric', 'fabricL', 'linen', 'rug'): setin(p, 'Sheen Weight', 0.15); setin(p, 'Roughness', 1.0)
+    elif name in ('boucle', 'rugShag'):
+        setin(p, 'Sheen Weight', 0.35); setin(p, 'Roughness', 1.0)
+        nt = mat.node_tree; nz = nt.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = 900 if name == 'boucle' else 450
+        nz.inputs['Detail'].default_value = 6; bp = nt.nodes.new('ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.6 if name == 'boucle' else 1.0
+        bp.inputs['Distance'].default_value = 0.003 if name == 'boucle' else 0.01
+        nt.links.new(nz.outputs['Fac'], bp.inputs['Height']); nt.links.new(bp.outputs['Normal'], p.inputs['Normal'])
+    elif name == 'graph': setin(p, 'Roughness', 0.55)
+    elif name == 'leaf': setin(p, 'Roughness', 0.45); setin(p, 'Subsurface Weight', 0.1)
 
+# optional colour overrides: {"material": "#hex"}
+def lin(h):
+    h=h.lstrip('#'); c=[int(h[i:i+2],16)/255 for i in (0,2,4)]
+    return tuple(((v/12.92) if v<=0.04045 else ((v+0.055)/1.055)**2.4) for v in c)+(1,)
+for mat in bpy.data.materials:
+    nm=mat.name.split('.')[0]
+    if nm in args.get('colors',{}) and mat.use_nodes:
+        pp=principled(mat)
+        if pp:
+            for l in list(pp.inputs['Base Color'].links): mat.node_tree.links.remove(l)
+            pp.inputs['Base Color'].default_value=lin(args['colors'][nm])
 # smooth shading for curved objects, bevels for boxes
-SOFT = ('fabric', 'fabricL', 'linen', 'velvet', 'rug', 'leather')
+SOFT = ('fabric', 'fabricL', 'linen', 'velvet', 'rug', 'leather', 'boucle', 'rugShag', 'blueVel')
+PILLOW = ('boucle', 'velvet', 'linen', 'blueVel')
 SKIP = ('wall', 'ceil', 'glass', 'curtain', 'emis', 'shadow')
 for ob in list(sc.objects):
     if ob.type != 'MESH': continue
@@ -110,11 +150,16 @@ for ob in list(sc.objects):
         for poly in ob.data.polygons: poly.use_smooth = True
         continue
     if not names or any(n in SKIP for n in names): continue
+    import bmesh
+    bm = bmesh.new(); bm.from_mesh(ob.data); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0002); bm.to_mesh(ob.data); bm.free()
     dims = sorted(ob.dimensions)
     soft = any(n in SOFT for n in names)
-    w = min(0.035 if soft else 0.004, dims[0] * 0.45)
+    w = min(0.035 if soft else (0.012 if 'graph' in names else 0.004), dims[0] * 0.45)
     if w < 0.0008: continue
     bv = ob.modifiers.new('bv', 'BEVEL'); bv.width = w; bv.segments = 4 if soft else 2; bv.limit_method = 'ANGLE'
+    if any(n in PILLOW for n in names):
+        bv.width = min(0.05, dims[0] * 0.3); bv.segments = 3
+        ss = ob.modifiers.new('ss', 'SUBSURF'); ss.levels = 2; ss.render_levels = 2
     for poly in ob.data.polygons: poly.use_smooth = True
     try: ob.data.set_sharp_from_angle(angle=math.radians(40))
     except Exception: pass
@@ -141,14 +186,14 @@ else:
 # artificial lights
 def spot(x, z, power, size=75):
     l = bpy.data.lights.new('s', 'SPOT'); l.energy = power; l.spot_size = math.radians(size); l.spot_blend = 0.7; l.color = WARM[:3]; l.shadow_soft_size = 0.03
-    o = bpy.data.objects.new('s', l); sc.collection.objects.link(o); o.location = B(x, 2675, z); o.rotation_euler = (0, 0, 0)
+    o = bpy.data.objects.new('s', l); sc.collection.objects.link(o); o.location = B(x, SPOT_Y, z); o.rotation_euler = (0, 0, 0)
 def point(x, y, z, power, r=0.05):
     l = bpy.data.lights.new('p', 'POINT'); l.energy = power; l.color = WARM[:3]; l.shadow_soft_size = r
     o = bpy.data.objects.new('p', l); sc.collection.objects.link(o); o.location = B(x, y, z)
 if eve:
     for x, z in SPOT: spot(x, z, 22)
     for x, z, y in PEND: point(x, y - 150, z, 6)
-    point(8380, 1560, 6500, 25, 0.15)  # floor lamp
+    for lx, ly, lz in LAMPS: point(lx, ly, lz, 25, 0.15)  # floor lamps
 else:
     for x, z in SPOT: spot(x, z, 3)
 
@@ -179,7 +224,7 @@ for v in VIEWS:
     pitch = max(-0.10, min(0.05, math.atan2(d.z, horiz)))
     cam.location = p
     cam.rotation_euler = (math.pi / 2 + pitch, 0, yaw - math.pi / 2)
-    cam_d.angle_y = math.radians(62 if v != 'bath' else 72)
+    cam_d.angle_y = math.radians(72 if v in ('bath', 'gard', 'gard2') else 62)
     cam_d.shift_y = -0.06
     sc.view_settings.exposure = EXPO.get(v, args.get('exp', 0.0))
     sc.render.filepath = f"{OUT}_{v}.jpg"
