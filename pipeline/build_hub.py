@@ -16,6 +16,10 @@ URLS = {
     '3d-f3': 'https://claude.ai/artifact/TtxLQreexDNjqHi2Xh63z7',
     'renders': 'https://claude.ai/artifact/NdNLScfeLo88R2JBLUzSV9',
 }
+RELS = {
+    'plan': 'plans/', 'album-f2': 'album/', 'album-f3': 'floor-3/album/',
+    '3d-f2': 'viz-3d/', '3d-f3': 'floor-3/viz-3d/', 'renders': 'renders/',
+}
 GO = {u.rsplit('/', 1)[1]: k for k, u in URLS.items()}
 
 HEAD = ('<!doctype html><html lang="ru"><head><meta charset="utf-8">'
@@ -32,6 +36,6 @@ for k, f in DOCS.items():
     enc[k] = base64.b64encode(html.encode('utf-8')).decode()
 
 src = open('hub-src.html', encoding='utf-8').read()
-out = src.replace('__DOCS__', json.dumps(enc)).replace('__URLS__', json.dumps(URLS))
+out = src.replace('__DOCS__', json.dumps(enc)).replace('__URLS__', json.dumps(URLS)).replace('__RELS__', json.dumps(RELS))
 open('belyi-mramor.html', 'w', encoding='utf-8').write(out)
 print(round(len(out) / 1e6, 2), 'MB')
