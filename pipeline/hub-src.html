@@ -1,0 +1,93 @@
+<title>Белый мрамор</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: приложение на весь экран — узкая шапка с названием, этажом и разделом; ниже один открытый документ проекта */
+:root{
+  --paper:#F1F0EC; --sheet:#FBFAF7; --ink:#1B1C1A; --muted:#6A6B65; --line:#D8D6CE; --acc:#56655A; --hl:#C98A17;
+  --f-disp:"Tenor Sans","Optima","Segoe UI",sans-serif;
+  --f-body:"Jost","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#111210;--sheet:#1A1B19;--ink:#ECEBE5;--muted:#9C9C94;--line:#33342F;--acc:#8FA595;--hl:#F0B43C;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#111210;--sheet:#1A1B19;--ink:#ECEBE5;--muted:#9C9C94;--line:#33342F;--acc:#8FA595;--hl:#F0B43C;color-scheme:dark}
+body[data-f="f3"]{--acc:#5D738B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body[data-f="f3"]{--acc:#93A7BE}}
+:root[data-theme="dark"] body[data-f="f3"]{--acc:#93A7BE}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:14px;display:flex;flex-direction:column;overflow:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sheet)}
+header{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;background:var(--sheet);border-bottom:1px solid var(--line);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:9px}
+.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto;min-width:0}
+.brand b{font:400 22px var(--f-disp);white-space:nowrap}
+.brand span{font:500 10.5px var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:var(--paper)}
+.seg button{font:500 13px var(--f-body);border:0;background:transparent;color:var(--ink);padding:6px 13px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+.seg.floor button[aria-pressed="true"]{background:var(--acc);color:var(--sheet)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
+.out{font:12px var(--f-mono);color:var(--muted);text-decoration:none;white-space:nowrap}
+.out:hover{color:var(--ink)}
+.tabs{display:flex;gap:8px;align-items:center;overflow-x:auto;max-width:100%}
+main{flex:1;min-height:0;position:relative;background:var(--paper)}
+main iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:var(--paper)}
+.load{position:absolute;inset:0;display:grid;place-items:center;font:13px var(--f-mono);color:var(--muted)}
+@media (max-width:760px){.brand span{display:none}.out{display:none}header{gap:8px 10px}.seg button{padding:6px 10px}}
+</style>
+
+<header>
+  <div class="brand"><b>Белый мрамор</b><span>дизайн-проект · 2-й и 3-й этажи</span></div>
+  <div class="seg floor" role="group" aria-label="Этаж"><button type="button" id="f-f2" data-f="f2">2-й этаж</button><button type="button" id="f-f3" data-f="f3">3-й этаж</button></div>
+  <div class="tabs">
+    <div class="seg" role="group" aria-label="Раздел">
+      <button type="button" id="s-plan" data-s="plan">Планировка</button><button type="button" id="s-album" data-s="album">Альбом</button><button type="button" id="s-3d" data-s="3d">3D-модель</button><button type="button" id="s-renders" data-s="renders">Рендеры</button>
+    </div>
+    <a class="out" id="out" href="#" target="_blank" rel="noopener">отдельно ↗</a>
+  </div>
+</header>
+<main id="main"><div class="load" id="load">Открываю…</div></main>
+
+<script>
+(function(){
+const DOCS=__DOCS__;
+const URLS=__URLS__;
+const $=id=>document.getElementById(id);
+/* ключ документа для пары «этаж + раздел»: планировки и рендеры общие, у них свой переключатель этажа */
+const keyOf=(f,s)=>s==='plan'?'plan':s==='renders'?'renders':`${s}-${f}`;
+const frames={}; let F='f2', S='plan', shown=null;
+function decode(b64){const bin=atob(b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return new TextDecoder().decode(u);}
+function frame(k){
+  if(frames[k]) return frames[k];
+  const fr=document.createElement('iframe'); fr.title=k; fr.hidden=true;
+  fr.addEventListener('load',()=>{ $('load').hidden=true; if(k==='plan'||k==='renders') fr.contentWindow.postMessage({bmFloor:F},'*'); });
+  fr.srcdoc=decode(DOCS[k]); $('main').appendChild(fr); frames[k]=fr; return fr;
+}
+function show(){
+  const k=keyOf(F,S);
+  if(shown&&shown!==k){ const old=frames[shown];
+    if(old){ if(shown.startsWith('3d-')){ old.remove(); delete frames[shown]; } else old.hidden=true; } }
+  const isNew=!frames[k]; $('load').hidden=!isNew;
+  const fr=frame(k); fr.hidden=false; shown=k;
+  if(!isNew&&(k==='plan'||k==='renders')) fr.contentWindow.postMessage({bmFloor:F},'*');
+  document.body.dataset.f=F;
+  document.querySelectorAll('[data-f]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===F?'true':'false'));
+  document.querySelectorAll('[data-s]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===S?'true':'false'));
+  const u=URLS[k]; $('out').hidden=!u; if(u) $('out').href=u;
+  const h=`${F}-${S}`; if(location.hash!=='#'+h){ try{history.replaceState(null,'','#'+h);}catch(e){ location.hash=h; } }
+  try{localStorage.setItem('bm-hub',h)}catch(e){}
+}
+function parse(h){const m=/^(f2|f3)-(plan|album|3d|renders)$/.exec(h||''); if(m){F=m[1];S=m[2];return true;} return false;}
+if(!parse(location.hash.slice(1))){ try{parse(localStorage.getItem('bm-hub'));}catch(e){} }
+document.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{F=b.dataset.f;show();}));
+document.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{S=b.dataset.s;show();}));
+window.addEventListener('hashchange',()=>{ if(parse(location.hash.slice(1))) show(); });
+/* сообщения из документов: смена этажа внутри планировок и рендеров, переходы по ссылкам между разделами */
+window.addEventListener('message',e=>{const d=e.data||{};
+  if(d.bmFloor==='f2'||d.bmFloor==='f3'){ if(d.bmFloor!==F){ F=d.bmFloor; if(S==='plan'||S==='renders'){ document.body.dataset.f=F; document.querySelectorAll('[data-f]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===F?'true':'false')); const h=`${F}-${S}`; try{history.replaceState(null,'','#'+h);}catch(_){} try{localStorage.setItem('bm-hub',h)}catch(_){} } else show(); } }
+  if(typeof d.bmGo==='string'){ const m=/^(album|3d|renders|plan)(?:-(f2|f3))?$/.exec(d.bmGo); if(m){ S=m[1]; if(m[2]) F=m[2]; show(); } }
+});
+show();
+})();
+</script>

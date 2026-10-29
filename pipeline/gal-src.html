@@ -95,7 +95,8 @@ $('feed').addEventListener('keydown',e=>{const f=e.target.closest('figure'); if(
 $('lbPrev').onclick=()=>open(cur-1); $('lbNext').onclick=()=>open(cur+1); $('lbClose').onclick=close;
 $('lb').addEventListener('click',e=>{if(e.target.id==='lb')close();});
 document.addEventListener('keydown',e=>{if($('lb').hidden)return; if(e.key==='Escape')close(); if(e.key==='ArrowLeft')open(cur-1); if(e.key==='ArrowRight')open(cur+1);});
-document.querySelectorAll('button[data-f]').forEach(b=>b.addEventListener('click',()=>{v=b.dataset.f==='3'?'f3':'green';render();}));
+document.querySelectorAll('button[data-f]').forEach(b=>b.addEventListener('click',()=>{v=b.dataset.f==='3'?'f3':'green';render(); if(window.parent!==window) window.parent.postMessage({bmFloor:v==='f3'?'f3':'f2'},'*');}));
+window.addEventListener('message',e=>{const d=e.data; if(d&&(d.bmFloor==='f2'||d.bmFloor==='f3')){const nv=d.bmFloor==='f3'?'f3':'green'; if(nv!==v){v=nv;render();}}});
 render();
 })();
 </script>

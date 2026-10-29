@@ -1,0 +1,284 @@
+<title>Планировки Белого мрамора</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: лист чертежа — шапка с переключателем этажа, крупный план в рамке, под ним таблицы помещений, дверей и окон */
+:root{
+  --paper:#F1F0EC; --sheet:#FBFAF7; --ink:#1B1C1A; --muted:#6A6B65; --line:#D8D6CE;
+  --wall:#2C2D2A; --room:#FBFAF7; --glass:#CFDFE5; --dim:#5E5F59; --acc:#56655A; --tag:#FBFAF7; --hl:#C98A17;
+  --f-disp:"Tenor Sans","Optima","Segoe UI",sans-serif;
+  --f-body:"Jost","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#111210;--sheet:#1A1B19;--ink:#ECEBE5;--muted:#9C9C94;--line:#33342F;--wall:#6E6D67;--room:#1C1D1A;--glass:#30505C;--dim:#A9A9A1;--acc:#8FA595;--tag:#1C1D1A;--hl:#F0B43C;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#111210;--sheet:#1A1B19;--ink:#ECEBE5;--muted:#9C9C94;--line:#33342F;--wall:#6E6D67;--room:#1C1D1A;--glass:#30505C;--dim:#A9A9A1;--acc:#8FA595;--tag:#1C1D1A;--hl:#F0B43C;color-scheme:dark}
+body[data-f="f3"]{--acc:#5D738B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body[data-f="f3"]{--acc:#93A7BE}}
+:root[data-theme="dark"] body[data-f="f3"]{--acc:#93A7BE}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 48px}
+.wrap{max-width:1280px;margin:0 auto;display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
+h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(28px,4.4vw,46px);line-height:1.05;margin:4px 0 0;text-wrap:balance}
+h2{font-family:var(--f-disp);font-weight:400;font-size:20px;margin:0 0 10px}
+.eyebrow{font:500 11px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lead{max-width:68ch;color:var(--muted);margin:8px 0 0;font-size:14.5px}
+.seg{display:inline-flex;border:1px solid var(--ink);border-radius:999px;padding:3px;gap:2px}
+.seg button{font:500 13px var(--f-body);border:0;background:transparent;color:var(--ink);padding:7px 15px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+.sheet{background:var(--sheet);border:1px solid var(--line)}
+.bar{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13.5px}
+.bar .stamp{font:12px var(--f-mono);color:var(--muted)}
+.layers{display:flex;flex-wrap:wrap;gap:6px 16px}
+.layers label{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.fig{overflow-x:auto;padding:8px}
+.fig svg{display:block;width:100%;min-width:680px;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;padding:10px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;gap:8px;align-items:center}
+.legend svg{width:34px;height:20px;flex:none}
+.tables{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:18px}
+.tables .sheet{padding:14px 16px;min-width:0}
+.tables .wide{grid-column:1/-1}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--ink)}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{font-weight:500;border-bottom:0}
+.mark{display:inline-block;min-width:30px;text-align:center;font:500 12px var(--f-mono);border:1.5px solid var(--acc);color:var(--acc);border-radius:999px;padding:0 6px}
+.mark.o{border-radius:4px;border-style:dashed}
+.note{font-size:13px;color:var(--muted);max-width:90ch;margin:0}
+/* svg */
+.wall{fill:var(--wall)} .room{fill:var(--room)} .glass{fill:var(--glass)}
+.wl{stroke:var(--wall);stroke-width:14;fill:none}
+.leaf{stroke:var(--ink);stroke-width:26;fill:none;stroke-linecap:round}
+.arc{stroke:var(--ink);stroke-width:9;fill:none}
+.dim{stroke:var(--dim);stroke-width:9;fill:none}
+.ext{stroke:var(--dim);stroke-width:6;fill:none;opacity:.6}
+.dt{font:150px var(--f-mono);fill:var(--dim);text-anchor:middle}
+.dt.s{font-size:118px}
+.rn{font:270px var(--f-disp);fill:var(--ink);text-anchor:middle}
+.ra{font:165px var(--f-mono);fill:var(--muted);text-anchor:middle}
+.tg circle,.tg rect{fill:var(--tag);stroke:var(--acc);stroke-width:22}
+.tg text{font:500 150px var(--f-mono);fill:var(--acc);text-anchor:middle;dominant-baseline:central}
+.op{fill:none;stroke:var(--acc);stroke-width:12;stroke-dasharray:60 45}
+.stl{stroke:var(--muted);stroke-width:12}
+.arw{stroke:var(--ink);stroke-width:26;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.rail{stroke:var(--ink);stroke-width:46;stroke-linecap:square}
+.sm{font:140px var(--f-body);fill:var(--ink);text-anchor:middle}
+.sm.m{fill:var(--muted)}
+.hid{display:none}
+@media (max-width:640px){.bar{flex-direction:column;align-items:flex-start}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Проект «Белый мрамор» · обмерные планы</div>
+      <h1 id="ttl">Планировка 2-го этажа</h1>
+      <p class="lead" id="lead"></p>
+    </div>
+    <div class="seg" role="group" aria-label="Этаж"><button type="button" id="b-f2" data-f="f2" aria-pressed="true">2-й этаж</button><button type="button" id="b-f3" data-f="f3" aria-pressed="false">3-й этаж</button></div>
+  </header>
+
+  <section class="sheet" aria-label="План этажа">
+    <div class="bar">
+      <div class="layers">
+        <label><input type="checkbox" id="l-outer" checked> Размеры по фасадам</label>
+        <label><input type="checkbox" id="l-inner" checked> Размеры помещений</label>
+        <label><input type="checkbox" id="l-tags" checked> Марки дверей</label>
+      </div>
+      <div class="stamp" id="stamp"></div>
+    </div>
+    <div class="fig" id="fig"></div>
+    <div class="legend">
+      <span><svg viewBox="0 0 34 20"><rect width="34" height="20" fill="var(--wall)"/></svg>Стена</span>
+      <span><svg viewBox="0 0 34 20"><rect width="34" height="20" fill="var(--wall)"/><rect x="0" y="5" width="34" height="10" fill="var(--glass)"/><line x1="0" y1="10" x2="34" y2="10" stroke="var(--wall)" stroke-width="1"/></svg>Окно</span>
+      <span><svg viewBox="0 0 34 20"><line x1="4" y1="18" x2="4" y2="3" stroke="var(--ink)" stroke-width="2.4"/><path d="M4 3 A15 15 0 0 1 19 18" fill="none" stroke="var(--ink)" stroke-width="1"/></svg>Дверь и сторона открывания</span>
+      <span><svg viewBox="0 0 34 20"><circle cx="17" cy="10" r="8" fill="var(--tag)" stroke="var(--acc)" stroke-width="2"/></svg>Марка двери</span>
+      <span><svg viewBox="0 0 34 20"><rect x="3" y="3" width="28" height="14" rx="2" fill="none" stroke="var(--acc)" stroke-width="1.6" stroke-dasharray="4 3"/></svg>Проём без двери</span>
+      <span><svg viewBox="0 0 34 20"><line x1="3" y1="10" x2="31" y2="10" stroke="var(--ink)" stroke-width="4"/></svg>Ограждение лестницы</span>
+      <span><svg viewBox="0 0 34 20"><line x1="3" y1="10" x2="31" y2="10" stroke="var(--dim)" stroke-width="1"/><path d="M1 14 L7 6 M27 14 L33 6" stroke="var(--dim)" stroke-width="1.6"/></svg>Размер в мм</span>
+    </div>
+  </section>
+
+  <div class="tables">
+    <section class="sheet"><h2>Помещения</h2><div class="tw"><table id="t-rooms"></table></div></section>
+    <section class="sheet"><h2>Окна</h2><div class="tw"><table id="t-win"></table></div></section>
+    <section class="sheet wide"><h2>Двери и проёмы</h2><div class="tw"><table id="t-doors"></table></div></section>
+  </div>
+  <p class="note" id="note"></p>
+</div>
+
+<script>
+(function(){
+/* Все размеры в миллиметрах, начало координат — внутренний угол наружных стен слева сверху. Наружные стены показаны условно 500 мм. */
+const FL={
+  f2:{title:'Планировка 2-го этажа',W:8712,D:11327,
+    lead:'Семь помещений, около 89 м². Потолок 2750 по черновой отделке, натяжной 2700. Лестница вверх на 3-й этаж, под ней марш вниз.',
+    rooms:[
+      {n:'Обеденная',x:0,y:0,w:2346,h:3650},
+      {n:'Кухня',x:0,y:3750,w:2346,h:5223},
+      {n:'Спальня 2',x:2766,y:0,w:2692,h:4644},
+      {n:'Спальня 1',x:5578,y:0,w:3134,h:4644},
+      {n:'Зал',x:2766,y:4764,w:5946,h:4026},
+      {n:'Коридор',x:0,y:9327,w:6800,h:2000,lx:1250,ly:10450,dv:5900},
+      {n:'Ванная',x:6912,y:9327,w:1800,h:2000,ly:10500}
+    ],
+    win:[['t',800,1760],['t',3620,4600],['t',6528,7520],['l',1294,2476],['l',4288,5388],['l',6877,7944],['r',663,1860],['r',3074,4013],['r',5275,6148],['r',7281,8219],['b',734,1714],['b',5700,6700]],
+    extDoors:[['l',9927,10847]],
+    gap:{l:1250},
+    doors:[
+      {m:'Д0',x:-500,y:9927,w:500,h:920,sw:{h:[-500,10847],l:[-1420,10847],e:[-500,9927]},t:[-1000,9620],where:'Вход в коридор',size:'920',kind:'входная металлическая',open:'наружу'},
+      {m:'Д1',x:6800,y:4644,w:800,h:120,sw:{h:[6800,4644],l:[6800,3844],e:[7600,4644]},t:[7930,4300],where:'Спальня 1 из зала',size:'≈800',kind:'скрытая, полотно 2000',open:'в спальню'},
+      {m:'Д2',x:3800,y:4644,w:800,h:120,sw:{h:[3800,4644],l:[3800,3844],e:[4600,4644]},t:[4930,4300],where:'Спальня 2 из зала',size:'≈800',kind:'скрытая, полотно 2000',open:'в спальню'},
+      {m:'Д4',x:6800,y:9805,w:112,h:700,sw:{h:[6800,9805],l:[6100,9805],e:[6800,10505]},t:[6250,10850],where:'Ванная из коридора',size:'≈700',kind:'скрытая, полотно 2000',open:'в коридор'},
+      {m:'П1',x:560,y:3650,w:960,h:100,open:'—',t:[1040,3990],where:'Обеденная — кухня',size:'960',kind:'проём без двери'},
+      {m:'П2',x:3154,y:8790,w:1148,h:537,open:'—',t:[3728,9058],where:'Зал — коридор',size:'1148, стена 537',kind:'проём без двери'},
+      {m:'П3',x:2346,y:7600,w:420,h:890,open:'—',t:[2556,8045],rot:1,where:'Кухня — зал',size:'890, стена 410',kind:'проём без двери'}
+    ],
+    stair:{x:2448,y:10327,w:3140,h:1000,n:12,dir:1,txt:'вверх',sub:'под маршем марш вниз',rail:[[2448,10327],[5588,10327]]},
+    walls:[[2556,6650,'410','v'],[5600,9058,'537','h']],
+    note:'Размеры помещений и проёмов взяты с вашего обмерного плана. Наружные стены показаны условно, их толщина не обмерялась. Привязки окон, особенно в коридоре, перед заказом нужно перемерить по месту.'
+  },
+  f3:{title:'Планировка 3-го этажа',W:9490,D:10800,
+    lead:'Жилой этаж: спальня с балконом, два кабинета, гардероб, ванная и общая комната у лестницы. Потолок 2600, натяжной 2550.',
+    rooms:[
+      {n:'Спальня',x:4650,y:0,w:4840,h:4100,lw:'4780',lx:6950,ly:2300,dv:9150},
+      {n:'Кабинет 1',x:0,y:0,w:4150,h:3700},
+      {n:'Кабинет 2',x:0,y:4030,w:4150,h:3820},
+      {n:'Общая комната',x:3130,y:8300,w:4250,h:2500,lh:'2400',area:21.0,lx:5150,ly:8800,dh:9430,dv:7030},
+      {n:'',x:4650,y:4500,w:2730,h:3800,lh:'3750',sub:1,dh:5600,dv:7030},
+      {n:'Гардероб',x:7540,y:4500,w:1950,h:6300,lx:8515,ly:9500,dh:6900,dv:9160},
+      {n:'Ванная',x:0,y:8300,w:2750,h:2500,ly:9700}
+    ],
+    win:[['l',740,2040],['l',5400,6800],['t',1880,3370],['t',5435,7500,'Б1'],['r',1200,4000],['r',5150,7950],['b',1450,2750],['b',5720,7100]],
+    extDoors:[],gap:{},
+    col:{x:7540,y:7890,w:1190,h:400},
+    doors:[
+      {m:'Д1',x:4950,y:4100,w:800,h:400,sw:{h:[4950,4460],l:[4950,3660],e:[5750,4460]},t:[6080,3900],where:'Спальня из общей комнаты',size:'≈800',kind:'скрытая, в плоскости стены коридора',open:'в спальню'},
+      {m:'Д2',x:4150,y:2600,w:500,h:800,sw:{h:[4150,2600],l:[3350,2600],e:[4150,3400]},t:[3700,2250],where:'Кабинет 1 из спальни',size:'≈800',kind:'скрытая, полотно 2000',open:'в кабинет'},
+      {m:'Д3',x:4150,y:4650,w:500,h:800,sw:{h:[4150,4650],l:[3350,4650],e:[4150,5450]},t:[3700,5800],where:'Кабинет 2 из общей комнаты',size:'≈800',kind:'скрытая, полотно 2000',open:'в кабинет'},
+      {m:'Д4',x:7380,y:5150,w:160,h:800,sw:{h:[7540,5150],l:[8340,5150],e:[7540,5950]},t:[8050,6300],where:'Гардероб из общей комнаты',size:'≈800',kind:'скрытая, полотно 2000',open:'в гардероб'},
+      {m:'Д5',x:2750,y:8500,w:380,h:700,sw:{h:[3130,8500],l:[3830,8500],e:[3130,9200]},t:[2300,9300],where:'Ванная из общей комнаты',size:'≈700',kind:'скрытая, полотно 2000',open:'в общую комнату'},
+      {m:'Б1',win:1,t:[6467,760],where:'Выход на балкон из спальни',size:'≈2060',kind:'балконная дверь, существующая',open:'—'}
+    ],
+    stair:{x:3200,y:9850,w:3220,h:950,n:14,dir:-1,txt:'вниз',sub:'проём, марш на 2-й этаж',rail:[[3200,9850],[6420,9850]]},
+    walls:[[4400,6400,'≈500','v'],[2050,3865,'330','h']],
+    note:'Размеры помещений взяты с вашего плана. В нём есть расхождения: сумма размеров по ширине больше общих 9490 мм, поэтому стена между кабинетами и общей комнатой принята около 500 мм, а ширина спальни на чертеже 4780. Наружные стены показаны условно. Волнистая линия на исходнике была только для замера, общая комната — одно помещение.'
+  }
+};
+const SVGNS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+const R=(x,y,w,h,a='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" ${a}/>`;
+const L=(x1,y1,x2,y2,c)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}"/>`;
+const T=(x,y,t,c,a='')=>`<text x="${x}" y="${y}" class="${c}" ${a}>${t}</text>`;
+const fmtA=n=>n.toLocaleString('ru-RU',{minimumFractionDigits:1,maximumFractionDigits:1});
+const tick=(x,y)=>`<path d="M${x-55} ${y+55} L${x+55} ${y-55}" class="dim" style="stroke-width:16"/>`;
+function dimH(x1,x2,y,t,small){return L(x1,y,x2,y,'dim')+tick(x1,y)+tick(x2,y)+T((x1+x2)/2,y-55,t,'dt'+(small?' s':''));}
+function dimV(y1,y2,x,t,small){const m=(y1+y2)/2;return L(x,y1,x,y2,'dim')+tick(x,y1)+tick(x,y2)+T(x-55,m,t,'dt'+(small?' s':''),`transform="rotate(-90 ${x-55} ${m})"`);}
+const roomOf=(f,side,mid)=>f.rooms.find(r=>!r.sub&&r.n&&(side==='t'?r.y===0&&mid>=r.x&&mid<=r.x+r.w:side==='b'?r.y+r.h===f.D&&mid>=r.x&&mid<=r.x+r.w:side==='l'?r.x===0&&mid>=r.y&&mid<=r.y+r.h:r.x+r.w===f.W&&mid>=r.y&&mid<=r.y+r.h));
+
+/* цепочка размеров вдоль одной стороны: окна, помещения, общий */
+function chains(f,side){
+  const len=(side==='t'||side==='b')?f.W:f.D;
+  const gap=(f.gap[side]||450), base=500+gap, step=520;
+  const ops=[...f.win.filter(w=>w[0]===side),...f.extDoors.filter(w=>w[0]===side)].map(w=>[w[1],w[2]]).sort((a,b)=>a[0]-b[0]);
+  const rs=f.rooms.filter(r=>!r.sub&&(side==='t'?r.y===0:side==='b'?r.y+r.h===f.D:side==='l'?r.x===0:r.x+r.w===f.W)).map(r=>({a:side==='t'||side==='b'?r.x:r.y,b:side==='t'||side==='b'?r.x+r.w:r.y+r.h,lab:side==='t'||side==='b'?r.lw:r.lh}));
+  const list=[];
+  if(ops.length){const p=[0];ops.forEach(o=>p.push(o[0],o[1]));p.push(len);list.push({p});}
+  const pr=[0];rs.sort((a,b)=>a.a-b.a).forEach(r=>pr.push(r.a,r.b));pr.push(len);
+  list.push({p:pr,labs:rs});
+  list.push({p:[0,len]});
+  let s='';
+  list.forEach((c,k)=>{
+    const off=base+k*step;
+    const pts=[...new Set(c.p)].sort((a,b)=>a-b);
+    const pos=v=>side==='t'?[v,-off]:side==='b'?[v,len===f.W?f.D+off:0]:side==='l'?[-off,v]:[f.W+off,v];
+    // выносные линии от наружной грани стены
+    pts.forEach(v=>{const [x,y]=pos(v); if(side==='t')s+=L(x,-500-60,x,y-90,'ext'); else if(side==='b')s+=L(x,f.D+500+60,x,y+90,'ext'); else if(side==='l')s+=L(-500-60,y,x-90,y,'ext'); else s+=L(f.W+500+60,y,x+90,y,'ext');});
+    for(let i=0;i<pts.length-1;i++){
+      const a=pts[i],b=pts[i+1],d=b-a; if(d<=0)continue;
+      const r=c.labs&&c.labs.find(q=>q.a===a&&q.b===b);
+      const t=r&&r.lab?r.lab:String(Math.round(d)), small=d<520;
+      if(side==='t'||side==='b'){const y=side==='t'?-off:f.D+off; s+=dimH(a,b,y,t,small);} else {const x=side==='l'?-off:f.W+off; s+=dimV(a,b,x,t,small);}
+    }
+  });
+  return {s,ext:base+(list.length-1)*step};
+}
+
+function swing(sw){const [hx,hy]=sw.h,[lx,ly]=sw.l,[ex,ey]=sw.e,r=Math.hypot(lx-hx,ly-hy);const cr=(ex-hx)*(ly-hy)-(ey-hy)*(lx-hx);
+  return L(hx,hy,lx,ly,'leaf')+`<path d="M${ex} ${ey} A${r} ${r} 0 0 ${cr>0?1:0} ${lx} ${ly}" class="arc"/>`;}
+function tag(d){const [x,y]=d.t;
+  if(d.m[0]==='П'){const t=`${d.m} · ${d.size.split(',')[0]}`,w=t.length*92+120;
+    return `<g class="tg" ${d.rot?`transform="rotate(-90 ${x} ${y})"`:''}>${R(x-w/2,y-125,w,250,'rx="40"')}${T(x,y,t,'')}</g>`;}
+  return `<g class="tg"><circle cx="${x}" cy="${y}" r="215"/>${T(x,y,d.m,'')}</g>`;}
+
+function draw(fid){
+  const f=FL[fid], W=f.W, D=f.D;
+  const C={t:chains(f,'t'),b:chains(f,'b'),l:chains(f,'l'),r:chains(f,'r')};
+  const vb=[-C.l.ext-420,-C.t.ext-360,W+C.l.ext+C.r.ext+840,D+C.t.ext+C.b.ext+720];
+  let s=R(-500,-500,W+1000,D+1000,'class="wall"');
+  f.rooms.forEach(r=>s+=R(r.x,r.y,r.w,r.h,'class="room"'));
+  f.doors.filter(d=>!d.win).forEach(d=>{ if(d.m!=='Д0') s+=R(d.x,d.y,d.w,d.h,'class="room"'); else s+=R(d.x,d.y,d.w,d.h,'fill="var(--sheet)"'); });
+  if(f.col) s+=R(f.col.x,f.col.y,f.col.w,f.col.h,'class="wall"');
+  // окна: стекло в стене, переплёт посередине
+  f.win.forEach(([sd,a,b,m])=>{
+    if(sd==='t') s+=R(a,-500,b-a,500,'class="glass"')+L(a,-250,b,-250,'wl')+L(a,-500,a,0,'wl')+L(b,-500,b,0,'wl');
+    if(sd==='b') s+=R(a,D,b-a,500,'class="glass"')+L(a,D+250,b,D+250,'wl')+L(a,D,a,D+500,'wl')+L(b,D,b,D+500,'wl');
+    if(sd==='l') s+=R(-500,a,500,b-a,'class="glass"')+L(-250,a,-250,b,'wl')+L(-500,a,0,a,'wl')+L(-500,b,0,b,'wl');
+    if(sd==='r') s+=R(W,a,500,b-a,'class="glass"')+L(W+250,a,W+250,b,'wl')+L(W,a,W+500,a,'wl')+L(W,b,W+500,b,'wl');
+  });
+  // лестница
+  const st=f.stair, step=st.w/st.n;
+  s+=R(st.x,st.y,st.w,st.h,'class="room" style="stroke:var(--muted);stroke-width:12"');
+  for(let i=1;i<st.n;i++) s+=L(st.x+i*step,st.y,st.x+i*step,st.y+st.h,'stl');
+  const ay=st.y+st.h*0.45, x0=st.dir>0?st.x+220:st.x+st.w-220, x1=st.dir>0?st.x+st.w-240:st.x+240, hd=st.dir>0?-1:1;
+  s+=`<circle cx="${x0}" cy="${ay}" r="55" fill="var(--ink)"/>`+L(x0,ay,x1,ay,'arw')+`<path d="M${x1+hd*200} ${ay-130} L${x1} ${ay} L${x1+hd*200} ${ay+130}" class="arw"/>`;
+  s+=T(st.x+st.w/2,st.y+st.h-150,`${st.txt} · ${st.sub}`,'sm m');
+  s+=L(st.rail[0][0],st.rail[0][1]-23,st.rail[1][0],st.rail[1][1]-23,'rail');
+  // двери
+  let tags='';
+  f.doors.filter(d=>d.sw).forEach(d=>s+=swing(d.sw));
+  f.doors.filter(d=>!d.sw&&!d.win).forEach(d=>s+=R(d.x+30,d.y+30,d.w-60,d.h-60,'class="op"'));
+  f.doors.forEach(d=>tags+=tag(d));
+  // подписи помещений
+  let lab='';
+  f.rooms.filter(r=>r.n).forEach(r=>{const x=r.lx??r.x+r.w/2, y=r.ly??r.y+r.h/2, a=r.area??r.w*r.h/1e6;
+    lab+=T(x,y,r.n,'rn')+T(x,y+250,fmtA(a)+' м²','ra');});
+  if(f.col) lab+=T(f.col.x+f.col.w/2,f.col.y+250,'колонна','sm','style="fill:var(--room)"');
+  // размеры помещений
+  let inner='';
+  f.rooms.forEach(r=>{const yh=r.dh??r.y+380, xv=r.dv??r.x+380;
+    inner+=dimH(r.x,r.x+r.w,yh,r.lw||String(r.w))+dimV(r.y,r.y+r.h,xv,r.lh||String(r.h));});
+  inner+=dimH(st.x,st.x+st.w,st.y-170,String(st.w))+dimV(st.y,st.y+st.h,st.x+st.w+230,String(st.h),true);
+  f.walls.forEach(([x,y,t,o])=>inner+=T(x,y,t,'dt s',`style="fill:var(--room)" ${o==='v'?`transform="rotate(-90 ${x} ${y})"`:''}`));
+  const outer=C.t.s+C.b.s+C.l.s+C.r.s;
+  $('fig').innerHTML=`<svg xmlns="${SVGNS}" viewBox="${vb.join(' ')}" role="img" aria-label="${f.title}"><g>${s}</g><g id="g-outer">${outer}</g><g id="g-inner">${inner}</g><g>${lab}</g><g id="g-tags">${tags}</g></svg>`;
+  layers();
+  // таблицы
+  const rooms=f.rooms.filter(r=>r.n);
+  const tot=rooms.reduce((a,r)=>a+(r.area??r.w*r.h/1e6),0);
+  $('t-rooms').innerHTML='<thead><tr><th>Помещение</th><th>Размер, мм</th><th>Площадь, м²</th></tr></thead><tbody>'+rooms.map(r=>`<tr><td>${r.n}</td><td class="n">${r.lw||r.w} × ${r.lh||r.h}${r.n==='Общая комната'?' + 2730 × 3750':''}</td><td class="n">${fmtA(r.area??r.w*r.h/1e6)}</td></tr>`).join('')+`</tbody><tfoot><tr><td>Итого</td><td></td><td class="n">${fmtA(tot)}</td></tr></tfoot>`;
+  $('t-doors').innerHTML='<thead><tr><th>Марка</th><th>Где</th><th>Проём, мм</th><th>Что стоит</th><th>Открывание</th></tr></thead><tbody>'+f.doors.map(d=>`<tr><td><span class="mark ${d.m[0]==='П'?'o':''}">${d.m}</span></td><td>${d.where}</td><td class="n">${d.size}</td><td>${d.kind}</td><td>${d.open}</td></tr>`).join('')+'</tbody>';
+  const sideN={t:'верх плана',b:'низ плана',l:'левая стена',r:'правая стена'};
+  $('t-win').innerHTML='<thead><tr><th>Помещение</th><th>Стена</th><th>Ширина, мм</th></tr></thead><tbody>'+f.win.map(([sd,a,b,m])=>{const r=roomOf(f,sd,(a+b)/2);return `<tr><td>${r?r.n:'—'}${m?` · <span class="mark">${m}</span>`:''}</td><td>${sideN[sd]}</td><td class="n">${m?'≈2060':b-a}</td></tr>`}).join('')+'</tbody>';
+  $('ttl').textContent=f.title; $('lead').textContent=f.lead; $('note').textContent=f.note;
+  $('stamp').textContent=`${fid==='f2'?'2-й':'3-й'} этаж · габарит по внутренним граням ${W} × ${D} мм`;
+  document.body.dataset.f=fid;
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===fid?'true':'false'));
+}
+function layers(){[['l-outer','g-outer'],['l-inner','g-inner'],['l-tags','g-tags']].forEach(([c,g])=>{const e=$(g); if(e) e.classList.toggle('hid',!$(c).checked);});}
+['l-outer','l-inner','l-tags'].forEach(id=>$(id).addEventListener('change',layers));
+
+let cur='f2';
+try{const h=location.hash.replace('#',''); if(h==='f2'||h==='f3') cur=h; else {const s=localStorage.getItem('bm-plans-floor'); if(s==='f2'||s==='f3') cur=s;}}catch(e){}
+function set(fid,fromHub){cur=fid; draw(fid); try{localStorage.setItem('bm-plans-floor',fid)}catch(e){}
+  if(!fromHub&&window.parent!==window) window.parent.postMessage({bmFloor:fid},'*');}
+document.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>set(b.dataset.f)));
+window.addEventListener('message',e=>{const d=e.data; if(d&&(d.bmFloor==='f2'||d.bmFloor==='f3')&&d.bmFloor!==cur) set(d.bmFloor,true);});
+draw(cur);
+})();
+</script>
