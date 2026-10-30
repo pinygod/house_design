@@ -211,6 +211,16 @@ function init(){
     if(r.s==='t'||r.s==='b'){const z=r.s==='t'?-270:11577; B(r.x,z,r.w,20,r.sill,2350,MAT.glass,false); [[r.x,40],[r.x+r.w-40,40],[r.x+r.w/2-20,40]].forEach(([x,w])=>B(x,z-10,w,40,r.sill,2350,MAT.metalB)); B(r.x,z-10,r.w,40,r.sill,r.sill+40,MAT.metalB); B(r.x,z-10,r.w,40,2310,2350,MAT.metalB);}
     else{const x=r.s==='l'?-270:8942; B(x,r.y,20,r.h,r.sill,2350,MAT.glass,false); [[r.y,40],[r.y+r.h-40,40],[r.y+r.h/2-20,40]].forEach(([z,d])=>B(x-10,z,40,d,r.sill,2350,MAT.metalB)); B(x-10,r.y,40,r.h,r.sill,r.sill+40,MAT.metalB); B(x-10,r.y,40,r.h,2310,2350,MAT.metalB);}
   });
+  /* radiator niches: linear grille in the sill, flush paintable panel with a 70 mm intake gap at the floor */
+  { const SL=std('#121212',.85); SL.name='shadow'; const sm=marble(1,.3);
+    wr.forEach(r=>{ if(r.s==='l'&&r.y>=6800) return; // window over the sink: radiator sits behind the kitchen base units
+      const hz=r.s==='t'||r.s==='b', a=hz?r.x:r.y, w=hz?r.w:r.h, f={t:0,b:11327,l:0,r:8712}[r.s], n=(r.s==='t'||r.s==='l')?1:-1, y0=r.sill;
+      const P=(u0,du,d0,d1,h0,h1,m,c=true)=>{const z0=n>0?f+d0:f-d1, z1=n>0?f+d1:f-d0; return hz?B(u0,z0,du,z1-z0,h0,h1,m,c):B(z0,u0,z1-z0,du,h0,h1,m,c);}; // d: depth from the wall face into the room
+      P(a,w,-238,20,y0,y0+20,sm);
+      P(a+20,w-40,-230,-170,y0+20,y0+21,SL,false); for(let u=a+35;u<a+w-30;u+=25) P(u,4,-228,-172,y0+20,y0+23,MAT.ceramic,false);
+      P(a,w,0,2,10,70,SL,false); P(a-2,4,0,2,70,y0,SL,false); P(a+w-2,4,0,2,70,y0,SL,false);
+    }); }
+  /* end radiator niches */
   OPEN.forEach(o=>B(o.x,o.y,o.w,o.h,o.ext?2050:2000,WH,MAT.wall));
 
   /* stairs */

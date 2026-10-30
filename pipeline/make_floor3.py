@@ -1,6 +1,7 @@
 import base64, re
 S = open('viz-src.html').read()
 fails = []
+S = S[:S.index('  /* radiator niches')] + S[S.index('  /* end radiator niches */\n')+len('  /* end radiator niches */\n'):]  # floor 3 has no radiator niches
 
 def cut(start, end, new):
     global S

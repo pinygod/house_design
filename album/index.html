@@ -310,6 +310,19 @@ details.src img{max-width:520px;width:100%;margin-top:12px;border:1px solid var(
         </ul></div>
       </div>
     </div>
+    <div class="body" style="border-top:1px solid var(--line)">
+      <div class="fig"><div class="scroll" id="pRad"></div></div>
+      <div class="notes">
+        <div><h3>Радиаторы в нишах под окнами</h3><ul>
+          <li>Тёплый воздух выходит вверх через щелевую решётку в подоконнике вдоль окна, холодный заходит снизу через щель 70 мм под панелью. Поток идёт по стеклу: окна не потеют и не дают холода, а это важно, потому что штор нет.</li>
+          <li><b>Подоконник:</b> кварцевый агломерат «белый мрамор» 20 мм, выступ 20 мм за плоскость стены. У рамы прорезь под линейную решётку 60 мм из алюминия в цвет подоконника. Решётка съёмная, под ней можно убрать пыль.</li>
+          <li><b>Панель:</b> МДФ 16 мм под покраску в цвет стены, в одной плоскости со стеной, по контуру шов 3 мм. Держится на магнитах и снимается целиком для доступа к кранам и уборки.</li>
+          <li>Живое сечение решётки и нижней щели — каждое не меньше площади радиатора в плане (глубина × длина). Иначе батарея будет отдавать меньше тепла.</li>
+          <li><b>Кухня, окно над мойкой:</b> радиатор закрывают нижние шкафы. Там решётка в столешнице вдоль окна и вентилируемый цоколь шкафов.</li>
+          <li>Температура регулируется из котельной, термоголовки на радиаторах не нужны.</li>
+        </ul></div>
+      </div>
+    </div>
   </article>
 
   <!-- 06 -->
@@ -408,6 +421,7 @@ details.src img{max-width:520px;width:100%;margin-top:12px;border:1px solid var(
         <ol>
           <li><b>Проём зал → коридор.</b> Принят 1148 мм, без полотна.</li>
           <li><b>Лестница:</b> в проекте марш вверх поднимается от входа в сторону ванной, а марш вниз проходит под ним в обратную сторону. Подтвердите направление и число ступеней обоих маршей.</li>
+          <li><b>Ниши радиаторов.</b> Нужны глубина ниш и размеры радиаторов, чтобы проверить живое сечение решётки и щели.</li>
           <li><b>Высота подоконника на кухне.</b> Мойка стоит под окном, столешница на 900 мм.</li>
           <li><b>Ширина ванной в чистоте</b> после плитки: ванна 1700 проходит при ширине от 1720 мм.</li>
           <li><b>Вентиляция ванной:</b> нужен рабочий вытяжной канал.</li>
@@ -719,6 +733,34 @@ function powerTable(){
   return out;
 }
 
+/* 05 radiator niche section */
+function radNode(){
+  const Y=h=>1150-h, ink='var(--d-ink)', dim='var(--d-dim)';
+  const t=(x,y,s,a='start')=>`<text x="${x}" y="${y}" style="font:30px var(--f-mono);fill:${ink}" text-anchor="${a}">${s}</text>`;
+  const dh=(x1,x2,y,s)=>`<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${dim}" stroke-width="2.5"/><path d="M${x1-9} ${y+9} L${x1+9} ${y-9} M${x2-9} ${y+9} L${x2+9} ${y-9}" stroke="${dim}" stroke-width="4"/><text x="${(x1+x2)/2}" y="${y-10}" style="font:26px var(--f-mono);fill:${dim}" text-anchor="middle">${s}</text>`;
+  const dv=(y1,y2,x,s)=>`<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${dim}" stroke-width="2.5"/><path d="M${x-9} ${y1+9} L${x+9} ${y1-9} M${x-9} ${y2+9} L${x+9} ${y2-9}" stroke="${dim}" stroke-width="4"/><text x="${x-10}" y="${(y1+y2)/2}" style="font:26px var(--f-mono);fill:${dim}" text-anchor="middle" transform="rotate(-90 ${x-10} ${(y1+y2)/2})">${s}</text>`;
+  const lead=(x1,y1,x2,y2,s)=>`<path d="M${x1} ${y1} L${x2} ${y2} H${x2+30}" stroke="${ink}" stroke-width="2" fill="none"/><circle cx="${x1}" cy="${y1}" r="5" fill="${ink}"/>`+t(x2+40,y2+10,s);
+  let s=`<defs><marker id="raC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4F86B0"/></marker><marker id="raW" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#D9822B"/></marker></defs>`;
+  s+=R(-120,Y(0),1500,60,'fill="var(--d-soft)"')+`<line x1="-120" y1="${Y(0)}" x2="1380" y2="${Y(0)}" stroke="${ink}" stroke-width="4"/>`;
+  s+=R(0,Y(830),300,830,'class="wall"')+R(0,Y(1150),210,320,'class="wall"');
+  s+=`<path d="M-20 ${Y(1150)} L230 ${Y(1150)}" stroke="var(--d-bg)" stroke-width="10"/>`;
+  s+=R(210,Y(1150),80,300,'fill="#1A1A1A"')+R(240,Y(1140),20,280,'class="glass" style="stroke-width:3"');
+  s+=R(300,Y(830),200,830,'fill="var(--d-floor)" stroke="'+ink+'" stroke-width="2" stroke-dasharray="10 8"');
+  s+=R(330,Y(620),100,500,'fill="#E3E1DC" stroke="#777" stroke-width="3"'); for(let y=Y(600);y<Y(140);y+=40) s+=`<line x1="335" y1="${y}" x2="425" y2="${y}" stroke="#A9A7A1" stroke-width="2"/>`;
+  s+=`<circle cx="380" cy="${Y(90)}" r="14" fill="none" stroke="#777" stroke-width="4"/>`;
+  s+=R(290,Y(870),12,20,'fill="#F2F1EE" stroke="'+ink+'" stroke-width="2.5"')+R(362,Y(870),158,20,'fill="#F2F1EE" stroke="'+ink+'" stroke-width="2.5"');
+  for(let x=306;x<360;x+=9) s+=R(x,Y(870),4,20,'fill="#B9B7B1"');
+  s+=R(484,Y(830),16,760,'fill="#ECE6DC" stroke="'+ink+'" stroke-width="2.5"')+R(476,Y(700),8,30,'fill="#555"')+R(476,Y(220),8,30,'fill="#555"');
+  s+=`<path d="M860 ${Y(36)} H520 Q440 ${Y(36)} 420 ${Y(70)} L400 ${Y(105)}" stroke="#4F86B0" stroke-width="7" fill="none" marker-end="url(#raC)"/>`;
+  s+=`<path d="M380 ${Y(640)} Q380 ${Y(760)} 340 ${Y(820)} L332 ${Y(905)} Q326 ${Y(1000)} 300 ${Y(1110)}" stroke="#D9822B" stroke-width="7" fill="none" marker-end="url(#raW)"/>`;
+  s+=dh(300,360,Y(925),'60')+dh(500,520,Y(925),'20')+dh(300,500,Y(700),'≈200')+dv(Y(70),Y(0),600,'70')+dv(Y(850),Y(0),-60,'850');
+  s+=lead(250,Y(1060),720,Y(1080),'окно')+lead(440,Y(860),720,Y(990),'подоконник, кварц 20 мм')+lead(330,Y(880),720,Y(930),'решётка 60 мм')+lead(380,Y(470),720,Y(560),'радиатор (существующий)')+lead(492,Y(330),720,Y(400),'панель МДФ 16, на магнитах')+lead(660,Y(36),720,Y(170),'щель 70 мм: вход воздуха')+t(720,Y(740),'ниша, глубина по замеру','start').replace('fill:'+ink,'fill:'+dim);
+  s+=t(1100,Y(1100),'тёплый воздух','start').replace('fill:'+ink,'fill:#D9822B')+t(1100,Y(1060),'холодный воздух','start').replace('fill:'+ink,'fill:#4F86B0');
+  s+=`<line x1="1040" y1="${Y(1110)}" x2="1090" y2="${Y(1110)}" stroke="#D9822B" stroke-width="7"/><line x1="1040" y1="${Y(1070)}" x2="1090" y2="${Y(1070)}" stroke="#4F86B0" stroke-width="7"/>`;
+  s+=t(-100,Y(-120),'Разрез по нише радиатора · М 1:10','start');
+  return svg(s,'-150 -40 1540 1340','Разрез по нише радиатора под окном');
+}
+
 /* 08 elevations — helper */
 function elevFrame(W,H,inner,label){
   const vb=`-300 -400 ${W+850} ${H+800}`;
@@ -881,6 +923,10 @@ function spec(v){
     ['Краска глубокоматовая моющаяся «молочный» NCS S 0804-Y30R','стены, двери',g?'≈190':'≈205','м² ×2 сл.','Tikkurila, Dulux, Caparol'],
     g?['Краска «эвкалипт»','ТВ-стена зала, изголовье Спальни 1','≈30','м² ×2 сл.','колеровка по NCS S 5010-G10Y, выкраска']:['Панели из шпона дуба, матовый лак','зал между дверями, изголовье Спальни 1','≈12,5','м²','изготовление на мебельном производстве'],
     ['Краска «светло-серый»','изголовье Спальни 2','≈7,5','м² ×2 сл.','NCS S 1502-Y'],
+    ['Подоконник, кварцевый агломерат «белый мрамор» 20 мм, с прорезью под решётку','11 окон, кроме окна над мойкой','≈11,1','м.п.','глубина по месту, выступ 20 мм'],
+    ['Решётка линейная 60 мм, алюминий, окраска в цвет подоконника, съёмная','подоконники','≈11,1','м.п.','живое сечение ≥ 60%'],
+    ['Панель-экран ниши радиатора, МДФ 16 мм под покраску','11 ниш, низ на 70 мм от пола','≈8,6','м²','окраска вместе со стенами'],
+    ['Магнитные защёлки для панелей','по 4 на панель','44','шт',''],
     ['Керамика «белый мрамор» 12 мм','кухонный фартук','≈3','м²','рисунок как у пола'],
     ['Ванная'],
     ['Керамогранит «белый мрамор» 60×120 (или 120×278)','стена напротив двери, стена с дверью, экран ванны','≈11','м²','Kerama Marazzi, Italon, Vitra'],
@@ -919,7 +965,7 @@ function render(){
   $('wMeta').textContent='М 1:100 · '+v.short; $('eMeta').textContent='М 1:50 · '+v.short; $('sMeta').textContent='Средний+ · '+v.short;
   $('vTag').textContent=v.tag; $('vText').innerHTML=v.text; $('swAcc').innerHTML=accSwatches(cur);
   $('pFurn').innerHTML=furniture(v);
-  $('pWalls').innerHTML=walls(cur);
+  $('pWalls').innerHTML=walls(cur); $('pRad').innerHTML=radNode();
   const used=[...new Set(finList(cur).map(x=>x[4]))];
   $('wLegend').innerHTML=used.map(k=>`<div><svg viewBox="0 0 1200 800"><rect width="1200" height="800" fill="${FIN[k].f}"/></svg><span>${FIN[k].n}<br><span class="mono" style="color:var(--muted);font-size:11.5px">${FIN[k].c}</span></span></div>`).join('');
   $('eZal').innerHTML=eZal(cur);
