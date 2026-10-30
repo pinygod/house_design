@@ -28,6 +28,9 @@ CAMS = {
   'cor': ([600, 1450, 11050], [4600, 1150, 10000]),
   'cor2': ([6600, 1450, 9900], [1000, 1100, 10900]),
   'bath': ([7050, 1450, 11200], [8000, 1200, 9400]),
+  'ov1': ([15076, 19000, 17503], [4356, 0, 5663]),
+  'ov2': ([-6364, 19000, 17503], [4356, 0, 5663]),
+  'ov3': ([15076, 19000, -6177], [4356, 0, 5663]),
 }
 SPOT_Y = 2675
 LAMPS = []  # no floor lamps on floor 2 either
@@ -47,6 +50,9 @@ if args.get('floor') == 3:
       'gard': ([8500, 1450, 4700], [9050, 1000, 9600]),
       'gard2': ([8500, 1450, 10000], [8950, 1100, 6000]),
       'bath': ([2600, 1450, 9900], [600, 1150, 8500]),
+      'ov1': ([15465, 19000, 17240], [4745, 0, 5400]),
+      'ov2': ([-5975, 19000, 17240], [4745, 0, 5400]),
+      'ov3': ([15465, 19000, -6440], [4745, 0, 5400]),
     }
 if 'cams' in args: CAMS.update({k: tuple(v) for k, v in args['cams'].items()})
 def B(x, y, z):  # three mm -> blender m
@@ -140,6 +146,45 @@ for mat in bpy.data.materials:
         if pp:
             for l in list(pp.inputs['Base Color'].links): mat.node_tree.links.remove(l)
             pp.inputs['Base Color'].default_value=lin(args['colors'][nm])
+# overview "doll's house": cut everything at CUT mm, dark section faces, model base around the stair hole
+CUT = args.get('cut')
+if CUT:
+    import bmesh
+    cz = CUT / 1000
+    cutm = bpy.data.materials.new('cutface'); cutm.use_nodes = True
+    setin(principled(cutm), 'Base Color', (0.035, 0.035, 0.033, 1)); setin(principled(cutm), 'Roughness', 0.8)
+    for ob in list(sc.objects):
+        if ob.type != 'MESH': continue
+        bb = [ob.matrix_world @ Vector(c) for c in ob.bound_box]
+        zmin, zmax = min(v.z for v in bb), max(v.z for v in bb)
+        dx, dy = max(v.x for v in bb) - min(v.x for v in bb), max(v.y for v in bb) - min(v.y for v in bb)
+        if max(dx, dy) > 40: ob.location.z += -0.36 - zmax; continue  # ground plane goes just under the base
+        if zmin >= cz - 0.001 or (zmax > cz and max(dx, dy) < 0.03):  # ceilings, fixtures, pendant cords
+            bpy.data.objects.remove(ob); continue
+        if zmax <= cz: continue
+        if ob.data.users > 1: ob.data = ob.data.copy()
+        mw = ob.matrix_world; mi = mw.inverted(); nm = mw.to_3x3()
+        bm = bmesh.new(); bm.from_mesh(ob.data)
+        for v in bm.verts:
+            w = mw @ v.co
+            if w.z > cz: w.z = cz; v.co = mi @ w
+        bm.normal_update()
+        ob.data.materials.append(cutm); idx = len(ob.data.materials) - 1
+        for f in bm.faces:
+            c = mw @ f.calc_center_median(); n = (nm @ f.normal).normalized()
+            if abs(c.z - cz) < 0.0006 and n.z > 0.9: f.material_index = idx
+        bm.to_mesh(ob.data); bm.free()
+    basem = bpy.data.materials.new('base'); basem.use_nodes = True
+    setin(principled(basem), 'Base Color', (0.55, 0.53, 0.50, 1)); setin(principled(basem), 'Roughness', 0.9)
+    FW_, FD_, HX = (9490, 10800, (3200, 9850, 6420, 10800)) if args.get('floor') == 3 else (8712, 11327, (2448, 10327, 5588, 11327))
+    def slab(x0, z0, x1, z1):
+        if x1 <= x0 or z1 <= z0: return
+        bpy.ops.mesh.primitive_cube_add(size=1); o = bpy.context.active_object
+        o.scale = ((x1 - x0) / 1000, (z1 - z0) / 1000, 0.35); o.location = B((x0 + x1) / 2, -177, (z0 + z1) / 2)
+        o.data.materials.append(basem)
+    hx0, hz0, hx1, hz1 = HX
+    slab(-500, -500, FW_ + 500, hz0); slab(-500, hz0, hx0, FD_ + 500); slab(hx1, hz0, FW_ + 500, FD_ + 500); slab(hx0, hz1, hx1, FD_ + 500)
+
 # smooth shading for curved objects, bevels for boxes
 SOFT = ('fabric', 'fabricL', 'linen', 'velvet', 'rug', 'leather', 'boucle', 'rugShag', 'blueVel')
 PILLOW = ('boucle', 'velvet', 'linen', 'blueVel')
@@ -222,11 +267,26 @@ for v in VIEWS:
     pos, look = CAMS[v]
     p = B(*pos); t = B(*look)
     d = (t - p); yaw = math.atan2(d.y, d.x); horiz = math.hypot(d.x, d.y)
-    pitch = max(-0.10, min(0.05, math.atan2(d.z, horiz)))
+    ov = v.startswith('ov')
+    pitch = math.atan2(d.z, horiz) if ov else max(-0.10, min(0.05, math.atan2(d.z, horiz)))
     cam.location = p
     cam.rotation_euler = (math.pi / 2 + pitch, 0, yaw - math.pi / 2)
-    cam_d.angle_y = math.radians(72 if v in ('bath', 'gard', 'gard2') else 62)
-    cam_d.shift_y = -0.06
+    cam_d.angle_y = math.radians(40 if ov else 72 if v in ('bath', 'gard', 'gard2') else 62)
+    cam_d.shift_y = 0 if ov else -0.06
+    if ov:  # centre the floor footprint in the frame and size it to ~88% of the frame
+        from bpy_extras.object_utils import world_to_camera_view
+        fw, fd = (9.49, 10.8) if args.get('floor') == 3 else (8.712, 11.327)
+        pts = [Vector((x, y, z)) for x in (-0.5, fw + 0.5) for y in (0.5, -fd - 0.5) for z in (-0.35, (CUT or 2300) / 1000)]
+        ctr = Vector((fw / 2, -fd / 2, 0.9))
+        for _ in range(6):
+            bpy.context.view_layer.update()
+            uv = [world_to_camera_view(sc, cam, q) for q in pts]
+            u0, u1 = min(q.x for q in uv), max(q.x for q in uv); v0, v1 = min(q.y for q in uv), max(q.y for q in uv)
+            m3 = cam.matrix_world.to_3x3(); right, up, fwd = m3 @ Vector((1, 0, 0)), m3 @ Vector((0, 1, 0)), m3 @ Vector((0, 0, -1))
+            d = (ctr - cam.location).dot(fwd); hgt = 2 * d * math.tan(cam_d.angle_y / 2); wid = hgt * W / H
+            cam.location += right * (((u0 + u1) / 2 - 0.5) * wid) + up * (((v0 + v1) / 2 - 0.5) * hgt)
+            s = max((u1 - u0) / 0.88, (v1 - v0) / 0.86)
+            cam.location += fwd * (d * (1 - s))
     sc.view_settings.exposure = EXPO.get(v, args.get('exp', 0.0))
     sc.render.filepath = f"{OUT}_{v}.jpg"
     bpy.ops.render.render(write_still=True)
