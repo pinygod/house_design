@@ -37,6 +37,11 @@ CAMS = {
   'bed2b': ([5250, 1450, 300], [3000, 1000, 4400]),
   'corzal': ([3730, 1450, 10120], [4100, 1100, 5500]),
   'bath2': ([8500, 1450, 9550], [7000, 1100, 11100]),
+  'alt1': ([7000, 1450, 4350], [7050, 1000, 0]),
+  'alt2': ([8050, 1450, 650], [5800, 1000, 3900]),
+  'alt3': ([6150, 1450, 1900], [8700, 1000, 4400]),
+  'alt4': ([6150, 1200, 3200], [8712, 1150, 3150]),
+  'topalt': ([9900, 8200, 6400], [7150, 0, 2500]),
   'ov1': ([15076, 19000, 17503], [4356, 0, 5663]),
   'ov2': ([-6364, 19000, 17503], [4356, 0, 5663]),
   'ov3': ([15076, 19000, -6177], [4356, 0, 5663]),
@@ -282,17 +287,18 @@ for v in VIEWS:
     pos, look = CAMS[v]
     p = B(*pos); t = B(*look)
     d = (t - p); yaw = math.atan2(d.y, d.x); horiz = math.hypot(d.x, d.y)
-    ov = v.startswith('ov')
+    ov = v.startswith(('ov', 'top'))
     pitch = math.atan2(d.z, horiz) if ov else max(-0.10, min(0.05, math.atan2(d.z, horiz)))
     cam.location = p
     cam.rotation_euler = (math.pi / 2 + pitch, 0, yaw - math.pi / 2)
-    cam_d.angle_y = math.radians(40 if ov else 72 if v in ('bath', 'bath2', 'gard', 'gard2') else 62)
+    cam_d.angle_y = math.radians((44 if v.startswith('top') else 40) if ov else 72 if v in ('bath', 'bath2', 'gard', 'gard2') else 62)
     cam_d.shift_y = 0 if ov else -0.06
-    if ov:  # centre the floor footprint in the frame and size it to ~88% of the frame
+    if ov:  # centre the floor (or, for top*, bedroom 1) footprint in the frame and size it to ~88% of the frame
         from bpy_extras.object_utils import world_to_camera_view
         fw, fd = (9.49, 10.8) if args.get('floor') == 3 else (8.712, 11.327)
-        pts = [Vector((x, y, z)) for x in (-0.5, fw + 0.5) for y in (0.5, -fd - 0.5) for z in (-0.35, (CUT or 2300) / 1000)]
-        ctr = Vector((fw / 2, -fd / 2, 0.9))
+        x0, x1, y0, y1 = (5.078, 9.212, 0.5, -5.144) if v.startswith('top') else (-0.5, fw + 0.5, 0.5, -fd - 0.5)
+        pts = [Vector((x, y, z)) for x in (x0, x1) for y in (y0, y1) for z in (-0.35, (CUT or 2300) / 1000)]
+        ctr = Vector(((x0 + x1) / 2, (y0 + y1) / 2, 0.9))
         for _ in range(6):
             bpy.context.view_layer.update()
             uv = [world_to_camera_view(sc, cam, q) for q in pts]

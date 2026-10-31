@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Третий этаж в 3D</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -116,6 +116,7 @@ const tabs=$('tabs');
 [...ROOMS.filter(r=>!r.sub).map(r=>[r.id,r.n,(r.area||(r.w*r.h/1e6).toFixed(1).replace('.',','))+' м²']),['plan','Весь этаж','3D-план']].forEach(([id,n,s])=>{
   const b=document.createElement('button'); b.type='button'; b.id='t-'+id; b.dataset.r=id; b.innerHTML=`${n}<small>${s}</small>`; tabs.appendChild(b);
 });
+{ const ref=$('t-bed1'); if(ref){ const b=document.createElement('button'); b.type='button'; b.id='t-bed1alt'; b.dataset.r='bed1alt'; b.innerHTML='Спальня 1 (Альтернатива)<small>кабинет · 14,6 м²</small>'; ref.after(b);} }
 
 const img=new Image(), rimg=new Image(); let nl=0; const done=()=>{if(++nl===2)init();}; img.onload=done; rimg.onload=done; img.src=MARBLE; rimg.src=RUT;
 
@@ -264,8 +265,8 @@ function init(){
     /* handles */
     const hz=(xc,zf,n,hd)=>{const z0=n>0?zf:zf-8; B(xc-25,z0,50,8,975,1025,hm); B(xc-7,n>0?zf:zf-45,14,45,993,1007,hm); const zl=n>0?zf+30:zf-48; B(hd<0?xc-130:xc,zl,130,18,991,1009,hm);};
     const hx=(xf,zc,n,hd)=>{const x0=n>0?xf:xf-8; B(x0,zc-25,8,50,975,1025,hm); B(n>0?xf:xf-45,zc-7,45,14,993,1007,hm); const xl=n>0?xf+30:xf-48; B(xl,hd<0?zc-130:zc,18,130,991,1009,hm);};
-    hz(5680,4500,1,-1); hz(5680,4460,-1,-1); hx(4650,3330,1,-1); hx(4610,3330,-1,-1); hx(4650,5380,1,-1); hx(4610,5380,-1,-1);
-    hx(7380,5880,-1,-1); hx(7420,5880,1,-1); hx(3130,9130,1,-1); hx(3090,9130,-1,-1);
+    hz(5020,4500,1,1); hz(5020,4460,-1,1); hx(4650,3330,1,-1); hx(4610,3330,-1,-1); hx(4650,4720,1,1); hx(4610,4720,-1,1);
+    hx(7380,5880,-1,-1); hx(7420,5880,1,-1); hx(3130,8570,1,1); hx(3090,8570,-1,1);
     /* switches */
     const swW=MAT.white, swB=MAT.metalB;
     const sx=(xf,zc,n,y,m)=>{B(n>0?xf:xf-10,zc-43,10,86,y-43,y+43,m); B(n>0?xf+10:xf-14,zc-30,4,60,y-30,y+30,m);};
@@ -337,7 +338,7 @@ function init(){
     let pts=[];
     if(room==='plan'){pts=[[7000,2000],[2000,1800],[2000,6000],[5500,9300],[8500,7000]];}
     else if(room==='cor'){pts=LINES.map(([[a,b],[c,d]])=>[(a+c)/2,(b+d)/2]).slice(0,5);}
-    else{const r=ROOMS.find(q=>q.id===room); const inside=SPOT.filter(([x,z])=>x>=r.x&&x<=r.x+r.w&&z>=r.y&&z<=r.y+r.h); const n=Math.min(5,inside.length); for(let i=0;i<n;i++) pts.push(inside[Math.floor(i*inside.length/n)]);}
+    else{const r=ROOMS.find(q=>q.id===(room==='bed1alt'?'bed1':room)); const inside=SPOT.filter(([x,z])=>x>=r.x&&x<=r.x+r.w&&z>=r.y&&z<=r.y+r.h); const n=Math.min(5,inside.length); for(let i=0;i<n;i++) pts.push(inside[Math.floor(i*inside.length/n)]);}
     pool.forEach((l,i)=>{const p=pts[i]; l.visible=true; if(p){l.position.set(M(p[0]),2.35,M(p[1])); l.userData.on=1;} else {l.userData.on=0;}});
   }
   function applyMode(){
@@ -354,6 +355,7 @@ function init(){
   let yaw=0,pitch=0;
   function setView(room){
     state.room=room;
+    const alt=room==='bed1alt'; if(alt!==state.alt){ state.alt=alt; buildVariant(state.v); }
     const plan=room==='plan';
     groups.ceil.visible=!plan; controls.enabled=plan;
     renderer.clippingPlanes=plan?[cut]:[];
@@ -381,9 +383,9 @@ function init(){
     document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.r===state.room?'true':'false'));
     document.querySelectorAll('[data-v]').forEach(b=>{if(b.tagName==='BUTTON')b.setAttribute('aria-pressed',b.dataset.v===state.v?'true':'false')});
     document.querySelectorAll('[data-m]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===state.mode?'true':'false'));
-    const r=ROOMS.find(q=>q.id===state.room);
+    const r=ROOMS.find(q=>q.id===(state.room==='bed1alt'?'bed1':state.room));
     $('iEy').textContent='Акцент · мягкий синий'+' · '+(state.mode==='day'?'день':'вечер');
-    $('iName').textContent=r?r.n:'Весь этаж';
+    $('iName').textContent=state.room==='bed1alt'?'Спальня 1 (Альтернатива)':(r?r.n:'Весь этаж');
     $('iMeta').textContent=r?(r.meta||`${(r.w*r.h/1e6).toFixed(1).replace('.',',')} м² · ${r.w} × ${r.h} мм`)+' · потолок 2,6 м':'≈92 м² · 6 помещений';
     $('iList').innerHTML=INFO[state.room][state.v].map(t=>`<li>${t}</li>`).join('');
     $('hint').textContent=state.room==='plan'?'Потяните для вращения · колесо или щипок приближают':'Потяните, чтобы осмотреться · колесо или щипок меняют угол обзора';

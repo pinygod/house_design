@@ -8,6 +8,7 @@ DOCS = {
     '3d-f2': 'viz-belyi-mramor.html',
     '3d-f3': 'viz3-belyi-mramor.html',
     'renders': 'renders-belyi-mramor.html',
+    'alt': 'alt-belyi-mramor.html',
 }
 URLS = {
     'album-f2': 'https://claude.ai/artifact/9MB8Cj6L6JAypYiB44Hc24',
@@ -15,10 +16,11 @@ URLS = {
     '3d-f2': 'https://claude.ai/artifact/28H1v2KMhfgMxbCvUBXe2U',
     '3d-f3': 'https://claude.ai/artifact/TtxLQreexDNjqHi2Xh63z7',
     'renders': 'https://claude.ai/artifact/NdNLScfeLo88R2JBLUzSV9',
+    'alt': 'https://claude.ai/artifact/VNL75chQxkJushUKa7NC45',
 }
 RELS = {
     'plan': 'plans/', 'album-f2': 'album/', 'album-f3': 'floor-3/album/',
-    '3d-f2': 'viz-3d/', '3d-f3': 'floor-3/viz-3d/', 'renders': 'renders/',
+    '3d-f2': 'viz-3d/', '3d-f3': 'floor-3/viz-3d/', 'renders': 'renders/', 'alt': 'bedroom-1-alt/',
 }
 GO = {u.rsplit('/', 1)[1]: k for k, u in URLS.items()}
 

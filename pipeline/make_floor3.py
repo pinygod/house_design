@@ -68,7 +68,7 @@ const INFO={
 """)
 rp("[...ROOMS.map(r=>[r.id,r.n,(r.w*r.h/1e6).toFixed(1).replace('.',',')+' м²']),['plan','Весь этаж','3D-план']]",
    "[...ROOMS.filter(r=>!r.sub).map(r=>[r.id,r.n,(r.area||(r.w*r.h/1e6).toFixed(1).replace('.',','))+' м²']),['plan','Весь этаж','3D-план']]")
-rp("let state={room:'zal',v:'green',mode:'day'};", "let state={room:'bed',v:'green',mode:'day'};")
+rp("let state={alt:false,room:'zal',v:'green',mode:'day'};", "let state={room:'bed',v:'green',mode:'day'};")
 rp("const img=new Image(); img.onload=init; img.src=MARBLE;",
    "const img=new Image(), rimg=new Image(); let nl=0; const done=()=>{if(++nl===2)init();}; img.onload=done; rimg.onload=done; img.src=MARBLE; rimg.src=RUT;")
 rp("  const marbleT=prep(new THREE.Texture(img));", "  const marbleT=prep(new THREE.Texture(img)); const rutT=prep(new THREE.Texture(rimg));")
@@ -86,7 +86,7 @@ cut("  /* floor */", "  /* walls by grid */", r"""  /* floor: Alpine Floor Rutla
 """)
 
 # ---------- walls grid generalisation ----------
-rp("const wr=WIN.map(([s,a,b,sill])=>({s,sill:sill||850,...(s==='t'?{x:a,y:-500,w:b-a,h:500}:s==='b'?{x:a,y:11327,w:b-a,h:500}:s==='l'?{x:-500,y:a,w:500,h:b-a}:{x:8712,y:a,w:500,h:b-a})}));",
+rp("const wr=WIN.map(([s,a,b,sill,nr])=>({s,sill:sill||850,nr,...(s==='t'?{x:a,y:-500,w:b-a,h:500}:s==='b'?{x:a,y:11327,w:b-a,h:500}:s==='l'?{x:-500,y:a,w:500,h:b-a}:{x:8712,y:a,w:500,h:b-a})}));",
    "const wr=WIN.map(([s,a,b,sill])=>({s,sill:sill===0?0:(sill||850),...(s==='t'?{x:a,y:-500,w:b-a,h:500}:s==='b'?{x:a,y:FD,w:b-a,h:500}:s==='l'?{x:-500,y:a,w:500,h:b-a}:{x:FW,y:a,w:500,h:b-a})}));")
 rp("const xs=uniq([-500,9212,", "const xs=uniq([-500,FW+500,")
 rp("const zs=uniq([-500,11827,", "const zs=uniq([-500,FD+500,")
@@ -162,8 +162,8 @@ cut("  function buildVariant(v){", "  function pendant(", r"""  function buildVa
     /* handles */
     const hz=(xc,zf,n,hd)=>{const z0=n>0?zf:zf-8; B(xc-25,z0,50,8,975,1025,hm); B(xc-7,n>0?zf:zf-45,14,45,993,1007,hm); const zl=n>0?zf+30:zf-48; B(hd<0?xc-130:xc,zl,130,18,991,1009,hm);};
     const hx=(xf,zc,n,hd)=>{const x0=n>0?xf:xf-8; B(x0,zc-25,8,50,975,1025,hm); B(n>0?xf:xf-45,zc-7,45,14,993,1007,hm); const xl=n>0?xf+30:xf-48; B(xl,hd<0?zc-130:zc,18,130,991,1009,hm);};
-    hz(5680,4500,1,-1); hz(5680,4460,-1,-1); hx(4650,3330,1,-1); hx(4610,3330,-1,-1); hx(4650,5380,1,-1); hx(4610,5380,-1,-1);
-    hx(7380,5880,-1,-1); hx(7420,5880,1,-1); hx(3130,9130,1,-1); hx(3090,9130,-1,-1);
+    hz(5020,4500,1,1); hz(5020,4460,-1,1); hx(4650,3330,1,-1); hx(4610,3330,-1,-1); hx(4650,4720,1,1); hx(4610,4720,-1,1);
+    hx(7380,5880,-1,-1); hx(7420,5880,1,-1); hx(3130,8570,1,1); hx(3090,8570,-1,1);
     /* switches */
     const swW=MAT.white, swB=MAT.metalB;
     const sx=(xf,zc,n,y,m)=>{B(n>0?xf:xf-10,zc-43,10,86,y-43,y+43,m); B(n>0?xf+10:xf-14,zc-30,4,60,y-30,y+30,m);};

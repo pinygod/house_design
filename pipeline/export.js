@@ -6,8 +6,8 @@ await p.route('**/fonts.googleapis.com/**',r=>r.abort());
 p.on('pageerror',e=>console.log('ERR',e.message));
 await p.goto('file://'+process.cwd()+'/vprev.html');await p.waitForTimeout(3000);
 await p.addScriptTag({path:'npmthree/package/examples/js/exporters/GLTFExporter.js'});
-for(const v of ['green','wood']){
-  const b64=await p.evaluate(async(v)=>{__bm.set('v',v);__bm.setView('zal');
+for(const v of ['green','alt']){ // alt: the alternative layout of bedroom 1
+  const b64=await p.evaluate(async(v)=>{__bm.set('v','green');__bm.setView(v==='alt'?'bed1alt':'zal');
     const roots=[__bm.groups.stat,__bm.groups.ceil,__bm.groups.vari];
     const jobs=[];
     roots.forEach(r=>r.traverse(o=>{if(!o.isMesh)return; const mats=Array.isArray(o.material)?o.material:[o.material]; const m=mats.find(x=>x.map&&(x.map.repeat.x!==1||x.map.repeat.y!==1||x.map.offset.x||x.map.offset.y)); if(m) jobs.push([o,m.map.repeat.clone(),m.map.offset.clone()]);}));

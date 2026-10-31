@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Спальня 1 (Альтернатива)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Jost:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: лист проекта — паспорт комнаты, переключатель вариантов с планом и плюсами/минусами, затем рекомендованный вариант подробно: рендеры, стены, электрика, мебель, советы */
+:root{
+  --paper:#F1F0EC; --sheet:#FBFAF7; --ink:#1B1C1A; --muted:#6A6B65; --line:#D8D6CE;
+  --wall:#2C2D2A; --room:#FBFAF7; --glass:#CFDFE5; --dim:#5E5F59; --acc:#56655A; --hl:#C98A17;
+  --z-work:#C9D3CB; --z-rest:#E6DCCB; --z-plant:#BFD3B4; --z-sew:#D9D1E0; --z-sport:#C8D2DC; --z-store:#E4E2DC;
+  --f-disp:"Tenor Sans","Optima","Segoe UI",sans-serif;
+  --f-body:"Jost","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#111210;--sheet:#1A1B19;--ink:#ECEBE5;--muted:#9C9C94;--line:#33342F;--wall:#6E6D67;--room:#1C1D1A;--glass:#30505C;--dim:#A9A9A1;--acc:#8FA595;--hl:#F0B43C;
+  --z-work:#38463C;--z-rest:#4A4234;--z-plant:#34472E;--z-sew:#433B4C;--z-sport:#334150;--z-store:#3A3A36;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#111210;--sheet:#1A1B19;--ink:#ECEBE5;--muted:#9C9C94;--line:#33342F;--wall:#6E6D67;--room:#1C1D1A;--glass:#30505C;--dim:#A9A9A1;--acc:#8FA595;--hl:#F0B43C;
+  --z-work:#38463C;--z-rest:#4A4234;--z-plant:#34472E;--z-sew:#433B4C;--z-sport:#334150;--z-store:#3A3A36;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 56px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:22px}
+h1{font-family:var(--f-disp);font-weight:400;font-size:clamp(30px,4.6vw,48px);line-height:1.05;margin:4px 0 0;text-wrap:balance}
+h2{font-family:var(--f-disp);font-weight:400;font-size:24px;margin:0;text-wrap:balance}
+h3{font-family:var(--f-disp);font-weight:400;font-size:18px;margin:0 0 8px}
+.eyebrow{font:500 11px var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.lead{max-width:70ch;color:var(--muted);margin:10px 0 0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));border:1px solid var(--line);background:var(--sheet)}
+.facts div{padding:10px 14px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-width:0}
+.facts b{display:block;font:500 10.5px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.facts span{font-family:var(--f-mono);font-size:13.5px;font-variant-numeric:tabular-nums}
+.sheet{background:var(--sheet);border:1px solid var(--line)}
+.head{display:flex;flex-wrap:wrap;gap:10px 20px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--ink);border-radius:999px;padding:3px;gap:2px}
+.seg button{font:500 13px var(--f-body);border:0;background:transparent;color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sheet)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--hl);outline-offset:3px}
+.rec{font:500 10.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--acc);color:var(--sheet);border-radius:3px;padding:2px 7px;margin-left:8px;vertical-align:2px}
+.var{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+.var .fig{padding:12px;border-right:1px solid var(--line);overflow-x:auto}
+.var .fig svg{display:block;width:100%;min-width:320px;height:auto}
+.var .txt{padding:16px 20px;display:grid;gap:16px;align-content:start;min-width:0}
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pc ul{margin:0;padding-left:18px}
+.pc li+li{margin-top:6px}
+.pc h3{font-size:16px}
+.plus h3{color:var(--acc)}
+.walls{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.walls li{padding-left:12px;border-left:2px solid var(--line)}
+.walls b{font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:10px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;gap:7px;align-items:center}
+.legend i{width:16px;height:12px;border:1px solid var(--dim);display:inline-block}
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px}
+.shots figure{margin:0;min-width:0}
+.shots figure.big{grid-column:1/-1}
+.shots img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;background:#2a2b29}
+.shots figcaption{font-size:13px;color:var(--muted);padding-top:6px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+.cols>div{padding:16px 20px;min-width:0}
+.cols>div+div{border-left:1px solid var(--line)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{text-align:left;font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--ink)}
+td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.zn{white-space:nowrap}
+.zt{display:inline-block;width:10px;height:10px;border:1px solid var(--dim);margin-right:6px;vertical-align:0}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0}
+.tips>div{padding:16px 20px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-width:0}
+.tips ul{margin:0;padding-left:18px}
+.tips li+li{margin-top:6px}
+.links{display:flex;flex-wrap:wrap;gap:16px;font-size:14px}
+.links a{color:var(--ink)}
+/* svg */
+.wl{fill:var(--wall)} .fl{fill:var(--room)} .gl{fill:var(--glass);stroke:var(--wall);stroke-width:.8}
+.it{stroke:var(--ink);stroke-width:.9}
+.gh{fill:none;stroke:var(--dim);stroke-width:.8;stroke-dasharray:3 2.5}
+.zf{fill:var(--glass);opacity:.35}
+.lab{font:500 7.4px var(--f-body);fill:var(--ink);text-anchor:middle}
+.lab2{font:6.3px var(--f-mono);fill:var(--ink);text-anchor:middle;opacity:.8}
+.glab{font:6px var(--f-mono);fill:var(--dim);text-anchor:middle}
+.dm{stroke:var(--dim);stroke-width:.7;fill:none}
+.dt{font:6.4px var(--f-mono);fill:var(--dim);text-anchor:middle}
+.cl{stroke:var(--hl);stroke-width:1;fill:none}
+.ct{font:500 6.4px var(--f-mono);fill:var(--hl);text-anchor:middle}
+.wt{font:500 6.6px var(--f-mono);fill:var(--muted);letter-spacing:.06em;text-anchor:middle;text-transform:uppercase}
+.pot{fill:var(--z-plant);stroke:var(--ink);stroke-width:.6}
+.so{fill:var(--sheet);stroke:var(--ink);stroke-width:.9}
+.so.t{fill:var(--z-plant)} .so.pc{fill:var(--z-work)}
+@media (max-width:860px){.var,.cols{grid-template-columns:minmax(0,1fr)}.var .fig{border-right:0;border-bottom:1px solid var(--line)}.cols>div+div{border-left:0;border-top:1px solid var(--line)}.pc{grid-template-columns:minmax(0,1fr)}.shots{grid-template-columns:minmax(0,1fr)}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Проект «Белый мрамор» · 2-й этаж · альтернативная планировка</div>
+    <h1>Спальня 1 (Альтернатива)</h1>
+    <p class="lead">Та же комната, но как кабинет на пять зон: работа за компьютером, отдых, растения, шитьё и спорт. Стиль этажа сохраняется: молочные стены, пол «белый мрамор», светлый дуб и букле, всё мелкое убрано в закрытые шкафы. Окна остаются свободными, на подоконниках только растения.</p>
+  </header>
+
+  <div class="facts" aria-label="Паспорт комнаты">
+    <div><b>Размер</b><span>310 × 465 см · 14,6 м²</span></div>
+    <div><b>Правая стена</b><span>75 · окно 140 · 250</span></div>
+    <div><b>Передняя стена</b><span>70 · окно 140 · 100</span></div>
+    <div><b>Задняя стена</b><span>90 · дверь 80 · 140</span></div>
+    <div><b>Левая стена</b><span>глухая, 465</span></div>
+    <div><b>Радиатор</b><span>только под правым окном</span></div>
+    <div><b>Дверь</b><span>открывается наружу</span></div>
+  </div>
+
+  <section class="sheet" aria-labelledby="h-var">
+    <div class="head">
+      <h2 id="h-var">Три варианта расстановки</h2>
+      <div class="seg" role="group" aria-label="Вариант"><button type="button" id="v-A" data-k="A">Вариант А<span class="rec">рекомендую</span></button><button type="button" id="v-B" data-k="B">Вариант Б</button><button type="button" id="v-C" data-k="C">Вариант В</button></div>
+    </div>
+    <div class="var">
+      <div class="fig" id="fig"></div>
+      <div class="txt">
+        <div><h3 id="vName"></h3><p style="margin:0;color:var(--muted)" id="vIdea"></p></div>
+        <div class="pc"><div class="plus"><h3>Плюсы</h3><ul id="vPlus"></ul></div><div class="minus"><h3>Минусы</h3><ul id="vMinus"></ul></div></div>
+        <div><h3>Что у какой стены</h3><ul class="walls" id="vWalls"></ul></div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--z-work)"></i>Работа</span><span><i style="background:var(--z-rest)"></i>Отдых</span><span><i style="background:var(--z-plant)"></i>Растения</span>
+      <span><i style="background:var(--z-sew)"></i>Шитьё</span><span><i style="background:var(--z-sport)"></i>Спорт</span><span><i style="background:var(--z-store)"></i>Хранение</span>
+      <span><i style="border-style:dashed;background:transparent"></i>Временное положение: ковёр, коврик, разложенный стол</span>
+      <span><i style="background:var(--glass);opacity:.6"></i>Зона у окна — свободна</span>
+      <span><svg width="22" height="10" aria-hidden="true"><line x1="1" y1="5" x2="21" y2="5" stroke="var(--hl)" stroke-width="1.6"/></svg>Проход, см</span>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-shots">
+    <div class="head"><h2 id="h-shots">Вариант А в рендерах</h2><div class="links"><a href="https://claude.ai/artifact/28H1v2KMhfgMxbCvUBXe2U#bed1alt" target="_blank" rel="noopener">Открыть в 3D ↗</a></div></div>
+    <div class="shots" id="shots"></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-el">
+    <div class="head"><h2 id="h-el">Вариант А: розетки и свет</h2></div>
+    <div class="var">
+      <div class="fig" id="figEl"></div>
+      <div class="txt">
+        <div class="tw"><table id="tEl"></table></div>
+        <div><h3>Свет</h3><ul class="walls">
+          <li><b>Общий:</b> 6 встроенных спотов 2700 K, как в проекте спальни, на диммере.</li>
+          <li><b>Работа:</b> бра над столом 2700 K на своём выключателе, экраны без бликов, потому что окно сбоку.</li>
+          <li><b>Шитьё:</b> настольная лампа 4000 K, CRI ≥ 90 — чтобы цвет ниток и ткани был честным.</li>
+          <li><b>Растения:</b> фитолинейки полного спектра под полками стеллажа, отдельная группа с реле времени.</li>
+        </ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-fur">
+    <div class="head"><h2 id="h-fur">Мебель для варианта А</h2></div>
+    <div class="tw" style="padding:6px 12px 12px"><table id="tFur"></table></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h-tips">
+    <div class="head"><h2 id="h-tips">Советы по зонам</h2></div>
+    <div class="tips">
+      <div><h3>Зонирование</h3><ul>
+        <li>Шитьё и спорт на разных концах комнаты: пыль от ткани и ниток не летит на коврик, вибрация от гантелей не мешает машинке.</li>
+        <li>Центр комнаты свободен. Коврик раскладывается на ковре перед диваном и после занятия убирается в шкаф.</li>
+        <li>Дверь открывается наружу, поэтому у входа ничего не нужно освобождать под полотно.</li>
+      </ul></div>
+      <div><h3>Растения</h3><ul>
+        <li>Стеллаж в 35 см глубиной стоит в стороне от дивана и швейной зоны: влажность и брызги от полива не попадают на ткани.</li>
+        <li>На каждой полке поддон с бортиком, под стеллажом защитный коврик или пробковые подкладки, чтобы не испортить мрамор.</li>
+        <li>Светодиодные фитолампы почти не греют, но держите их в 20–30 см над листьями и оставьте зазор от стены для проветривания.</li>
+        <li>Переднее окно без радиатора — лучшее место для горшков. На правом подоконнике решётку радиатора не закрывать: горшки только у краёв и на подставках, тёплый воздух сушит листья.</li>
+      </ul></div>
+      <div><h3>Розетки</h3><ul>
+        <li>Компьютер — на отдельной линии с УЗО, розетки над столом на высоте 90 см, сетевой кабель туда же.</li>
+        <li>Фитолампы — своя группа через реле времени в щитке или умная розетка, чтобы свет включался по расписанию без участия.</li>
+        <li>В швейной зоне две розетки над столом: машинка и лампа, рядом отдельная под утюг на 16 А.</li>
+        <li>В спортивном углу двойная розетка у пола: колонка, массажёр.</li>
+      </ul></div>
+      <div><h3>Стиль</h3><ul>
+        <li>Все фасады молочные матовые без ручек, как стены. Открыт только стеллаж с растениями: светлый дуб и белый металл.</li>
+        <li>Гантели, резинки, ролл и коврик — только в закрытом шкафу. Внутри низкая полка под гантели, крючки для резинок и вертикальный отсек для коврика.</li>
+        <li>Диван в молочном букле, акцент эвкалипта только в текстиле: подушка, плед.</li>
+        <li>Стена за столом не акцентная, как в основном проекте спальни, а молочная: комнате нужно больше света.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <div class="links"><a href="https://claude.ai/artifact/9MB8Cj6L6JAypYiB44Hc24" target="_blank" rel="noopener">Альбом 2-го этажа ↗</a><a href="https://claude.ai/artifact/28H1v2KMhfgMxbCvUBXe2U#bed1alt" target="_blank" rel="noopener">3D: Спальня 1 (Альтернатива) ↗</a><a href="https://claude.ai/artifact/NdNLScfeLo88R2JBLUzSV9" target="_blank" rel="noopener">Рендеры ↗</a></div>
+</div>
+
+<script>
+(function(){
+const IMG={};
+const $=id=>document.getElementById(id);
+/* Комната в сантиметрах: x — от левой глухой стены, y — от передней стены (с окном). Задняя стена с дверью внизу плана, как на общем плане этажа. */
+const W=310, D=465;
+const WIN_R=[250,390], WIN_F=[70,210], DOOR=[90,170];
+const ZC={work:'var(--z-work)',rest:'var(--z-rest)',plant:'var(--z-plant)',sew:'var(--z-sew)',sport:'var(--z-sport)',store:'var(--z-store)'};
+const VARS={
+ A:{name:'Вариант А · глухая стена работает',idea:'Компьютер и диван у глухой стены, растения и спорт впереди справа, шитьё у двери. Центр комнаты свободен под коврик.',
+  items:[
+   {z:'work',n:'Стол ПК',s:'140×65',x:0,y:30,w:65,h:140},{z:'work',n:'',x:72,y:72,w:56,h:56,r:1},
+   {z:'rest',n:'Диван',s:'150×85',x:0,y:245,w:85,h:150},
+   {z:'sport',n:'Спорт',s:'80×40',x:270,y:50,w:40,h:80},
+   {z:'plant',n:'Стеллаж',s:'90×35',x:217,y:0,w:90,h:35},
+   {z:'sew',n:'Стол',s:'80×45',x:175,y:420,w:80,h:45},{z:'sew',n:'Пенал',s:'50×55',x:260,y:410,w:50,h:55},
+   {z:'store',n:'Шкаф',s:'85×40',x:2,y:425,w:85,h:40}],
+  ghosts:[{n:'ковёр 160×230',x:98,y:145,w:160,h:230},{n:'коврик 180×60',x:155,y:180,w:60,h:180},{n:'стол разложен',x:175,y:285,w:80,h:135}],
+  clear:[[85,330,155,330,'70'],[87,452,175,452,'88'],[230,420,230,340,'80']],
+  pots:[[100,-8],[140,-8],[180,-8],[318,262],[318,378]],
+  plus:['Компьютер у глухой стены: свет из переднего окна падает сбоку, экраны не бликуют.','Шитьё и спорт на разных концах комнаты, между ними 2,7 м.','Растения в углу между окнами: днём естественный свет, вечером фитолампы.','Центр свободен, коврик раскладывается на ковре перед диваном.'],
+  minus:['Пенал в 20 см от откоса правого окна: окно свободно, но створку открывать с запасом.','Разложенный для раскроя стол на время подходит к зоне у правого окна.','Стол и диван на одной стене, сидящий на диване видит спину работающего.'],
+  walls:[['Левая глухая','в 30 см от передней стены стол ПК 140×65 с двумя мониторами на кронштейне и бра; через 75 см диван 150×85, его центр на оси правого окна.'],
+   ['Передняя','левый простенок 70 свободен; окно 140 — подоконник под растения; в правом простенке 100 стеллаж с фитолампами 90×35×180.'],
+   ['Правая','в 50 см от передней стены закрытый шкаф для спорта 80×40×200; дальше до окна свободно; окно 140 свободно; в простенке 75 за окном пенал.'],
+   ['Задняя','слева от двери закрытый шкаф 85×40×200; дверь 80 наружу; справа стол-трансформер 80×45 и пенал 50×55×210.'],
+   ['Центр','ковёр 160×230, на нём место для коврика 180×60.']]},
+ B:{name:'Вариант Б · рабочее место у двери',idea:'Компьютер у задней стены справа от двери, шитьё в переднем левом углу, спорт и растения впереди справа.',
+  items:[
+   {z:'work',n:'Стол ПК',s:'140×65',x:170,y:400,w:140,h:65},{z:'work',n:'',x:212,y:338,w:56,h:56,r:1},
+   {z:'rest',n:'Диван',s:'150×85',x:0,y:245,w:85,h:150},
+   {z:'sew',n:'Пенал',s:'55×50',x:0,y:0,w:55,h:50},{z:'sew',n:'Стол',s:'45×80',x:0,y:60,w:45,h:80},
+   {z:'plant',n:'Стеллаж',s:'90×35',x:217,y:0,w:90,h:35},
+   {z:'sport',n:'Спорт',s:'80×40',x:270,y:60,w:40,h:80},
+   {z:'store',n:'Шкаф',s:'85×40',x:2,y:425,w:85,h:40}],
+  ghosts:[{n:'ковёр 160×220',x:98,y:150,w:160,h:220},{n:'стол разложен',x:0,y:60,w:135,h:80},{n:'коврик',x:175,y:165,w:60,h:180}],
+  clear:[[45,155,125,155,'80'],[85,330,155,330,'70'],[87,452,170,452,'83']],
+  pots:[[100,-8],[140,-8],[180,-8],[318,262],[318,378]],
+  plus:['Компьютер далеко от обоих окон, у задней стены: розетки и интернет проще подвести из зала.','Швейный стол получает дневной свет сбоку от переднего окна, удобно подбирать цвет.','У глухой стены только диван, стена спокойная.'],
+  minus:['Кресло за столом оказывается у края правого окна, подход к окну уже.','Шитьё и спорт в одной, передней, половине комнаты.','За компьютером сидишь спиной к комнате, дверь сбоку.'],
+  walls:[['Левая глухая','в углу у передней стены пенал 55×50; рядом стол-трансформер 45×80; через 105 см диван 150×85 напротив правого окна.'],
+   ['Передняя','левый простенок занят пеналом; окно свободно, на подоконнике растения; справа стеллаж 90×35×180.'],
+   ['Правая','шкаф для спорта 80×40×200 в 60 см от передней стены; окно свободно.'],
+   ['Задняя','слева шкаф 85×40×200; дверь; справа стол ПК 140×65 вплотную к правой стене.']]},
+ C:{name:'Вариант В · диагональ',idea:'Шитьё и спорт по диагонали, растения встречают у входа, компьютер и диван у глухой стены.',
+  items:[
+   {z:'work',n:'Стол ПК',s:'140×65',x:0,y:30,w:65,h:140},{z:'work',n:'',x:72,y:72,w:56,h:56,r:1},
+   {z:'rest',n:'Диван',s:'150×85',x:0,y:245,w:85,h:150},
+   {z:'plant',n:'Стеллаж',s:'120×35',x:185,y:430,w:120,h:35},
+   {z:'sew',n:'Пенал',s:'55×50',x:255,y:0,w:55,h:50},{z:'sew',n:'Стол',s:'45×80',x:265,y:60,w:45,h:80},
+   {z:'sport',n:'Спорт',s:'85×40',x:2,y:425,w:85,h:40}],
+  ghosts:[{n:'ковёр 160×230',x:98,y:145,w:160,h:230},{n:'стол разложен',x:175,y:60,w:135,h:80},{n:'коврик',x:110,y:180,w:60,h:180}],
+  clear:[[185,100,265,100,'80'],[85,330,155,330,'70'],[87,452,185,452,'98']],
+  pots:[[100,-8],[140,-8],[180,-8],[318,262],[318,378]],
+  plus:['Шитьё и спорт по диагонали — максимально далеко друг от друга.','Стеллаж с растениями встречает у входа, фитолампы у глухой части задней стены.','Швейный угол между двумя окнами — лучший дневной свет для шитья.'],
+  minus:['Швейный стол в углу между окнами, до переднего окна 45 см: не перед окном, но близко.','Один закрытый шкаф на спорт и хранение, мелочам места меньше.','Растения у двери: рядом проход, полив требует аккуратности.'],
+  walls:[['Левая глухая','стол ПК 140×65 в 30 см от передней стены; диван 150×85 напротив правого окна.'],
+   ['Передняя','окно свободно; в правом простенке 100 пенал 55×50.'],
+   ['Правая','у передней стены стол-трансформер 45×80; окно свободно.'],
+   ['Задняя','слева шкаф для спорта и хранения 85×40×200; дверь; справа стеллаж с фитолампами 120×35×180.']]}
+};
+const S=(x,y,w,h,a)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" ${a}/>`;
+const T=(x,y,t,c,a='')=>`<text x="${x}" y="${y}" class="${c}" ${a}>${t}</text>`;
+const tk=(x,y)=>`<path d="M${x-3} ${y+3} L${x+3} ${y-3}" class="dm" style="stroke-width:1"/>`;
+const dH=(a,b,y,t)=>`<line x1="${a}" y1="${y}" x2="${b}" y2="${y}" class="dm"/>`+tk(a,y)+tk(b,y)+T((a+b)/2,y-2.5,t,'dt');
+const dV=(a,b,x,t)=>`<line x1="${x}" y1="${a}" x2="${x}" y2="${b}" class="dm"/>`+tk(x,a)+tk(x,b)+T(x-2.5,(a+b)/2,t,'dt',`transform="rotate(-90 ${x-2.5} ${(a+b)/2})"`);
+function room(){
+  let s=S(-12,-12,W+24,D+24,'class="wl"')+S(0,0,W,D,'class="fl"');
+  s+=S(W,WIN_R[0],12,WIN_R[1]-WIN_R[0],'class="gl"')+S(WIN_F[0],-12,WIN_F[1]-WIN_F[0],12,'class="gl"');
+  s+=S(W-60,WIN_R[0],60,WIN_R[1]-WIN_R[0],'class="zf"')+S(WIN_F[0],0,WIN_F[1]-WIN_F[0],60,'class="zf"');
+  s+=S(DOOR[0],D,DOOR[1]-DOOR[0],12,'class="fl"');
+  s+=`<line x1="${DOOR[1]}" y1="${D+12}" x2="${DOOR[1]}" y2="${D+92}" stroke="var(--ink)" stroke-width="1.8"/><path d="M${DOOR[0]} ${D+12} A80 80 0 0 0 ${DOOR[1]} ${D+92}" class="dm"/>`;
+  s+=T(W/2,-30,'передняя стена · окно','wt')+T(40,D+60,'задняя · дверь в зал','wt')+T(-30,D/2,'левая глухая','wt',`transform="rotate(-90 -30 ${D/2})"`)+T(W+30,D/2,'правая · окно, радиатор','wt',`transform="rotate(90 ${W+30} ${D/2})"`);
+  s+=dH(0,WIN_F[0],-18,'70')+dH(WIN_F[0],WIN_F[1],-18,'140')+dH(WIN_F[1],W,-18,'100');
+  s+=dV(0,WIN_R[0],W+18,'250')+dV(WIN_R[0],WIN_R[1],W+18,'140')+dV(WIN_R[1],D,W+18,'75');
+  s+=dH(0,DOOR[0],D+22,'90')+dH(DOOR[0],DOOR[1],D+22,'80')+dH(DOOR[1],W,D+22,'140');
+  s+=dV(0,D,-18,'465');
+  return s;
+}
+function plan(k){
+  const v=VARS[k]; let s=room();
+  v.ghosts.forEach(g=>s+=S(g.x,g.y,g.w,g.h,'class="gh"')+T(g.x+g.w/2,g.y+g.h-4,g.n,'glab'));
+  v.items.forEach(it=>{ if(it.r){s+=`<circle cx="${it.x+it.w/2}" cy="${it.y+it.h/2}" r="${it.w/2}" fill="${ZC[it.z]}" class="it"/>`;return;}
+    s+=S(it.x,it.y,it.w,it.h,`fill="${ZC[it.z]}" class="it"`);
+    const cx=it.x+it.w/2, cy=it.y+it.h/2, vert=it.h>it.w*1.3&&it.w<50;
+    if(vert) s+=T(cx,cy,`${it.n} ${it.s}`,'lab2',`transform="rotate(-90 ${cx} ${cy})" dominant-baseline="middle"`);
+    else s+=T(cx,cy-1,it.n,'lab')+T(cx,cy+7,it.s,'lab2');});
+  v.pots.forEach(([x,y])=>s+=`<circle cx="${x}" cy="${y}" r="5" class="pot"/>`);
+  v.clear.forEach(([x1,y1,x2,y2,t])=>{s+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="cl"/>`+`<circle cx="${x1}" cy="${y1}" r="1.4" fill="var(--hl)"/><circle cx="${x2}" cy="${y2}" r="1.4" fill="var(--hl)"/>`;
+    const mx=(x1+x2)/2,my=(y1+y2)/2; s+=y1===y2?T(mx,my-3,t,'ct'):T(mx+3,my,t,'ct','text-anchor="start"');});
+  return `<svg viewBox="-48 -44 406 600" role="img" aria-label="${v.name}">${s}</svg>`;
+}
+/* электрика варианта А: [x,y,стена,высота,назначение,группа,класс] */
+const EL=[[0,60,'л',90,'Над столом: 2-я + USB-C','ПК, отдельная линия','pc'],[0,150,'л',90,'Над столом: 2-я + LAN','ПК, отдельная линия','pc'],[0,100,'л',160,'Вывод под бра над столом','свет','pc'],
+  [0,235,'л',30,'У дивана: 1-я + USB','розетки комнаты',''],[260,0,'п',200,'Над стеллажом: фитолампы','фито, реле времени','t'],[300,40,'пр',30,'У стеллажа: поливалка, увлажнитель','фито, реле времени','t'],
+  [310,140,'пр',30,'Спорт: 2-я у пола','розетки комнаты',''],[215,465,'з',90,'Над швейным столом: 2-я','розетки комнаты',''],[250,465,'з',110,'Утюг, 16 А','розетки комнаты',''],
+  [182,465,'з',90,'Выключатель: споты · бра','свет','']];
+function elPlan(){
+  const v=VARS.A; let s=room();
+  v.items.forEach(it=>{ if(it.r) return; s+=S(it.x,it.y,it.w,it.h,`fill="${ZC[it.z]}" class="it" opacity=".55"`); s+=T(it.x+it.w/2,it.y+it.h/2+2,it.n,'lab2'); });
+  EL.forEach(([x,y,w,h,n,g,c],i)=>{ const px=x===0?6:x===W?W-6:x, py=y===0?6:y===D?D-6:y;
+    s+=n.startsWith('Выключатель')?S(px-5,py-5,10,10,'class="so"'):`<circle cx="${px}" cy="${py}" r="5.5" class="so ${c}"/>`;
+    s+=T(px,py+2.2,String(i+1),'lab2'); });
+  return `<svg viewBox="-48 -44 406 600" role="img" aria-label="Розетки и свет, вариант А">${s}</svg>`;
+}
+const FUR=[
+ ['work','Стол рабочий','140 × 65, h 75','столешница шпон светлого дуба, боковины белые матовые; кабель-канал под столешницей'],
+ ['work','Кронштейн на 2 монитора','настенный, вылет до 45','белый или чёрный матовый, экономит 25–30 см глубины стола'],
+ ['work','Тумба подкатная','42 × 45 × 60','белая матовая, без ручек, нажимное открывание'],
+ ['work','Кресло рабочее','≈ 60 × 60','обивка тёплый светлый лён или рогожка, крестовина белая или графит'],
+ ['work','Бра над столом','вынос 15–20','чёрный матовый металл, 2700 K, свой выключатель'],
+ ['rest','Диван','150 × 85, h 80','молочное букле, низкие ножки, подушки бархат цвета эвкалипт'],
+ ['rest','Ковёр','160 × 230','шерсть, короткий ворс, молочно-серый'],
+ ['plant','Стеллаж для растений','90 × 35 × 180','полки светлый дуб, рама белый металл; фитолинейки под 3 полками, поддоны'],
+ ['plant','Кашпо на подоконники','Ø 12–16','белая матовая керамика с поддонами; на правом подоконнике только у краёв'],
+ ['sew','Пенал швейный','50 × 55 × 210','молочные матовые фасады; внутри выдвижная полка под машинку, ящики под нитки и ткани'],
+ ['sew','Стол-трансформер с тумбой','80 × 45 → 80 × 135, h 75','корпус белый матовый, столешница светлый дуб; раскладывается к центру комнаты'],
+ ['sew','Лампа для шитья','настольная','4000 K, CRI ≥ 90, белая'],
+ ['sport','Шкаф для спорта','80 × 40 × 200','молочные матовые фасады без ручек; низкая полка под гантели, крючки для резинок, вертикальный отсек для коврика и ролла'],
+ ['store','Шкаф закрытый','85 × 40 × 200','молочные фасады в цвет стены, бумаги и мелочи']];
+const ZN={work:'Работа',rest:'Отдых',plant:'Растения',sew:'Шитьё',sport:'Спорт',store:'Хранение'};
+let cur='A'; try{const h=location.hash.replace('#',''); if(VARS[h]) cur=h;}catch(e){}
+function show(k){cur=k; const v=VARS[k];
+  $('fig').innerHTML=plan(k); $('vName').textContent=v.name; $('vIdea').textContent=v.idea;
+  $('vPlus').innerHTML=v.plus.map(t=>`<li>${t}</li>`).join(''); $('vMinus').innerHTML=v.minus.map(t=>`<li>${t}</li>`).join('');
+  $('vWalls').innerHTML=v.walls.map(([w,t])=>`<li><b>${w}:</b> ${t}</li>`).join('');
+  document.querySelectorAll('[data-k]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k?'true':'false'));}
+document.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.k)));
+show(cur);
+$('figEl').innerHTML=elPlan();
+$('tEl').innerHTML='<thead><tr><th>№</th><th>Что</th><th>h, см</th><th>Группа</th></tr></thead><tbody>'+EL.map((e,i)=>`<tr><td class="n">${i+1}</td><td>${e[4]}</td><td class="n">${e[3]}</td><td>${e[5]}</td></tr>`).join('')+'</tbody>';
+$('tFur').innerHTML='<thead><tr><th>Зона</th><th>Предмет</th><th>Размер, см</th><th>Материал и цвет</th></tr></thead><tbody>'+FUR.map(f=>`<tr><td class="zn"><span class="zt" style="background:${ZC[f[0]]}"></span>${ZN[f[0]]}</td><td>${f[1]}</td><td class="n">${f[2]}</td><td>${f[3]}</td></tr>`).join('')+'</tbody>';
+const SH=[['green_day_topalt','Сверху: все пять зон, стены срезаны на высоте 2,3 м',1],['green_day_alt1','От двери: стол у глухой стены, стеллаж с растениями в углу между окнами',0],['green_day_alt2','Из переднего угла: диван напротив правого окна, рабочий стол, шкаф у двери',0],
+  ['green_day_alt3','Швейная зона у задней стены и свободное правое окно',0],['green_day_alt4','С дивана: правое окно с растениями на подоконнике',0],['green_eve_alt1','Вечер: споты, бра над столом, фитолампы',1]];
+$('shots').innerHTML=SH.filter(s=>IMG[s[0]]).map(s=>`<figure class="${s[2]?'big':''}"><img loading="lazy" src="${IMG[s[0]]}" alt="${s[1]}"><figcaption>${s[1]}</figcaption></figure>`).join('')||'<p style="padding:6px 4px;color:var(--muted)">Рендеры появятся после расчёта.</p>';
+})();
+</script>

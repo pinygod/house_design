@@ -42,7 +42,7 @@ main iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background
   <div class="seg floor" role="group" aria-label="Этаж"><button type="button" id="f-f2" data-f="f2">2-й этаж</button><button type="button" id="f-f3" data-f="f3">3-й этаж</button></div>
   <div class="tabs">
     <div class="seg" role="group" aria-label="Раздел">
-      <button type="button" id="s-plan" data-s="plan">Планировка</button><button type="button" id="s-album" data-s="album">Альбом</button><button type="button" id="s-3d" data-s="3d">3D-модель</button><button type="button" id="s-renders" data-s="renders">Рендеры</button>
+      <button type="button" id="s-plan" data-s="plan">Планировка</button><button type="button" id="s-album" data-s="album">Альбом</button><button type="button" id="s-3d" data-s="3d">3D-модель</button><button type="button" id="s-renders" data-s="renders">Рендеры</button><button type="button" id="s-alt" data-s="alt">Спальня 1 (Альтернатива)</button>
     </div>
     <a class="out" id="out" href="#" target="_blank" rel="noopener">отдельно ↗</a>
   </div>
@@ -55,7 +55,7 @@ const DOCS=__DOCS__;
 const URLS=(/github\.io$|^localhost$|^127\./.test(location.hostname)||location.protocol==='file:')?__RELS__:__URLS__; // на GitHub Pages и локально — страницы из репозитория
 const $=id=>document.getElementById(id);
 /* ключ документа для пары «этаж + раздел»: планировки и рендеры общие, у них свой переключатель этажа */
-const keyOf=(f,s)=>s==='plan'?'plan':s==='renders'?'renders':`${s}-${f}`;
+const keyOf=(f,s)=>s==='plan'?'plan':s==='renders'?'renders':s==='alt'?'alt':`${s}-${f}`;
 const frames={}; let F='f2', S='plan', shown=null;
 function decode(b64){const bin=atob(b64), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return new TextDecoder().decode(u);}
 function frame(k){
@@ -65,6 +65,8 @@ function frame(k){
   fr.srcdoc=decode(DOCS[k]); $('main').appendChild(fr); frames[k]=fr; return fr;
 }
 function show(){
+  if(S==='alt') F='f2'; // альтернатива есть только на втором этаже
+  $('s-alt').hidden=F!=='f2';
   const k=keyOf(F,S);
   if(shown&&shown!==k){ const old=frames[shown];
     if(old){ if(shown.startsWith('3d-')){ old.remove(); delete frames[shown]; } else old.hidden=true; } }
@@ -78,7 +80,7 @@ function show(){
   const h=`${F}-${S}`; if(location.hash!=='#'+h){ try{history.replaceState(null,'','#'+h);}catch(e){ location.hash=h; } }
   try{localStorage.setItem('bm-hub',h)}catch(e){}
 }
-function parse(h){const m=/^(f2|f3)-(plan|album|3d|renders)$/.exec(h||''); if(m){F=m[1];S=m[2];return true;} return false;}
+function parse(h){const m=/^(f2|f3)-(plan|album|3d|renders|alt)$/.exec(h||''); if(m){F=m[1];S=m[2];return true;} return false;}
 if(!parse(location.hash.slice(1))){ try{parse(localStorage.getItem('bm-hub'));}catch(e){} }
 document.querySelectorAll('[data-f]').forEach(b=>b.addEventListener('click',()=>{F=b.dataset.f;show();}));
 document.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{S=b.dataset.s;show();}));
@@ -86,7 +88,7 @@ window.addEventListener('hashchange',()=>{ if(parse(location.hash.slice(1))) sho
 /* сообщения из документов: смена этажа внутри планировок и рендеров, переходы по ссылкам между разделами */
 window.addEventListener('message',e=>{const d=e.data||{};
   if(d.bmFloor==='f2'||d.bmFloor==='f3'){ if(d.bmFloor!==F){ F=d.bmFloor; if(S==='plan'||S==='renders'){ document.body.dataset.f=F; document.querySelectorAll('[data-f]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===F?'true':'false')); const h=`${F}-${S}`; try{history.replaceState(null,'','#'+h);}catch(_){} try{localStorage.setItem('bm-hub',h)}catch(_){} } else show(); } }
-  if(typeof d.bmGo==='string'){ const m=/^(album|3d|renders|plan)(?:-(f2|f3))?$/.exec(d.bmGo); if(m){ S=m[1]; if(m[2]) F=m[2]; show(); } }
+  if(typeof d.bmGo==='string'){ const m=/^(album|3d|renders|plan|alt)(?:-(f2|f3))?$/.exec(d.bmGo); if(m){ S=m[1]; if(m[2]) F=m[2]; show(); } }
 });
 show();
 })();
