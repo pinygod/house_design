@@ -68,7 +68,7 @@ const INFO={
 """)
 rp("[...ROOMS.map(r=>[r.id,r.n,(r.w*r.h/1e6).toFixed(1).replace('.',',')+' м²']),['plan','Весь этаж','3D-план']]",
    "[...ROOMS.filter(r=>!r.sub).map(r=>[r.id,r.n,(r.area||(r.w*r.h/1e6).toFixed(1).replace('.',','))+' м²']),['plan','Весь этаж','3D-план']]")
-rp("let state={alt:false,room:'zal',v:'green',mode:'day'};", "let state={room:'bed',v:'green',mode:'day'};")
+rp("let state={alt:false,bathOpen:false,room:'zal',v:'green',mode:'day'};", "let state={room:'bed',v:'green',mode:'day'};")
 rp("const img=new Image(); img.onload=init; img.src=MARBLE;",
    "const img=new Image(), rimg=new Image(); let nl=0; const done=()=>{if(++nl===2)init();}; img.onload=done; rimg.onload=done; img.src=MARBLE; rimg.src=RUT;")
 rp("  const marbleT=prep(new THREE.Texture(img));", "  const marbleT=prep(new THREE.Texture(img)); const rutT=prep(new THREE.Texture(rimg));")

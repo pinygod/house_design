@@ -37,6 +37,10 @@ CAMS = {
   'bed2b': ([5250, 1450, 300], [3000, 1000, 4400]),
   'corzal': ([3730, 1450, 10120], [4100, 1100, 5500]),
   'bath2': ([8500, 1450, 9550], [7000, 1100, 11100]),
+  'bd1': ([3900, 1450, 9850], [6800, 1150, 9800]),
+  'bd2': ([5700, 1450, 11220], [6850, 1150, 9650]),
+  'bd1o': ([3900, 1450, 9850], [6800, 1150, 9800]),
+  'bd2o': ([5700, 1450, 11220], [6850, 1150, 9650]),
   'alt1': ([7000, 1450, 4350], [7050, 1000, 0]),
   'alt2': ([8050, 1450, 650], [5800, 1000, 3900]),
   'alt3': ([6150, 1450, 1900], [8700, 1000, 4400]),
@@ -291,7 +295,7 @@ for v in VIEWS:
     pitch = math.atan2(d.z, horiz) if ov else max(-0.10, min(0.05, math.atan2(d.z, horiz)))
     cam.location = p
     cam.rotation_euler = (math.pi / 2 + pitch, 0, yaw - math.pi / 2)
-    cam_d.angle_y = math.radians((44 if v.startswith('top') else 40) if ov else 72 if v in ('bath', 'bath2', 'gard', 'gard2') else 62)
+    cam_d.angle_y = math.radians((44 if v.startswith('top') else 40) if ov else 72 if v in ('bath', 'bath2', 'gard', 'gard2', 'bd2', 'bd2o') else 62)
     cam_d.shift_y = 0 if ov else -0.06
     if ov:  # centre the floor (or, for top*, bedroom 1) footprint in the frame and size it to ~88% of the frame
         from bpy_extras.object_utils import world_to_camera_view
